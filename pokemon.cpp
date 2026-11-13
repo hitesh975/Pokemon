@@ -36,10 +36,6 @@ struct Move {
 };
 
 
-//moves array
-const Move Moves[] = {
-};
-
 
 
 //pokemon structure
@@ -63,9 +59,7 @@ struct Pokemon {
 };
 
 
-//pokemon array
-const Pokemon Pokemons[] = {
-};
+
 
 int main () {
 
