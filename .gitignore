@@ -1,1 +1,24 @@
-vcpkg/
+# vcpkg installation
+/vcpkg/
+
+# CMake build files
+/build/
+cmake-build-*/
+
+# Compiled programs
+*.exe
+*.o
+*.obj
+*.dll
+
+# Editor files
+.vscode/
+.idea/
+
+# Temporary files
+*.log
+*.tmp
+
+# Windows junk
+Thumbs.db
+Desktop.ini
