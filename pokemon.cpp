@@ -9,11 +9,7 @@ using namespace std;
 using json = nlohmann::json;
 
 
-// ==========================================
-// ENUMS
-// ==========================================
-
-// Unique identifiers for moves
+// Move IDs
 enum class MoveID {
     THUNDERBOLT,
     THUNDER_WAVE,
@@ -21,13 +17,13 @@ enum class MoveID {
     SWORDS_DANCE
 };
 
-// Move categories
 enum class MoveCategory {
     DAMAGE,
     STATUS,
     HEAL,
     STAT_CHANGE
 };
+
 
 // Pokemon types
 enum class PokemonType {
@@ -51,7 +47,6 @@ enum class PokemonType {
     FAIRY
 };
 
-// Nature
 enum class Nature {
     HARDY,
     ADAMANT,
@@ -61,10 +56,7 @@ enum class Nature {
 };
 
 
-// ==========================================
-// STAT STRUCTURE
-// ==========================================
-
+// All six Pokemon stats
 struct Stats {
     int hp;
     int attack;
@@ -75,10 +67,7 @@ struct Stats {
 };
 
 
-// ==========================================
-// MOVE STRUCTURE
-// ==========================================
-
+// Move information
 struct Move {
     string name;
     MoveCategory category;
@@ -90,49 +79,37 @@ struct Move {
 };
 
 
-// ==========================================
-// POKEMON SPECIES DATA
-// ==========================================
-
+// Base information for each Pokemon species
 struct PokemonSpecies {
     string name;
     PokemonType type;
-    
+
     Stats baseStats;
 };
 
 
-// ==========================================
-// INDIVIDUAL POKEMON DATA
-// ==========================================
-
+// An individual Pokemon
 struct Pokemon {
     string nickname;
+    string speciesID;
+
     int level;
     int experience;
-
     int friendship;
+
     Nature nature;
 
-    // Individual values
     Stats ivs;
-
-    // Effort values
     Stats evs;
 
-    // References to the central move database
     array<MoveID, 4> learnedMoves;
 };
 
 
-// ==========================================
-// BATTLE STATE
-// ==========================================
-
+// Stats that can change during battle
 struct BattleState {
     int currentHP;
 
-    // Temporary stat modifications during battle
     int attackStage = 0;
     int defenseStage = 0;
     int spAttackStage = 0;
@@ -140,10 +117,6 @@ struct BattleState {
     int speedStage = 0;
 };
 
-
-// ==========================================
-// MAIN
-// ==========================================
 
 int main() {
 
