@@ -78,43 +78,83 @@
         "speed": 65
       }
     },
+
     {
       "id": "004",
-      "name": "Barkbudd",
-      "types": ["GRASS", "ROCK"],
+      "name": "Sprigmite",
+      "types": ["GRASS", "PSYCHIC"],
       "baseStats": {
         "hp": 50,
-        "attack": 60,
-        "defense": 65,
-        "spAttack": 35,
-        "spDefense": 55,
-        "speed": 35
+        "attack": 45,
+        "defense": 48,
+        "spAttack": 65,
+        "spDefense": 60,
+        "speed": 52
       }
     },
     {
       "id": "005",
-      "name": "Rubblebark",
-      "types": ["GRASS", "ROCK"],
+      "name": "Thornveil",
+      "types": ["GRASS", "PSYCHIC"],
       "baseStats": {
-        "hp": 70,
-        "attack": 85,
-        "defense": 90,
-        "spAttack": 45,
-        "spDefense": 75,
-        "speed": 45
+        "hp": 68,
+        "attack": 55,
+        "defense": 65,
+        "spAttack": 85,
+        "spDefense": 78,
+        "speed": 65
       }
     },
     {
       "id": "006",
-      "name": "Terracrown",
-      "types": ["GRASS", "ROCK"],
+      "name": "Mytheroot",
+      "types": ["GRASS", "PSYCHIC"],
       "baseStats": {
-        "hp": 95,
-        "attack": 115,
-        "defense": 115,
-        "spAttack": 55,
-        "spDefense": 105,
-        "speed": 55
+        "hp": 85,
+        "attack": 65,
+        "defense": 80,
+        "spAttack": 115,
+        "spDefense": 100,
+        "speed": 90
+      }
+    },
+    {
+      "id": "007",
+      "name": "Wispfin",
+      "types": ["WATER", "GHOST"],
+      "baseStats": {
+        "hp": 45,
+        "attack": 40,
+        "defense": 50,
+        "spAttack": 65,
+        "spDefense": 55,
+        "speed": 65
+      }
+    },
+    {
+      "id": "008",
+      "name": "Gloamray",
+      "types": ["WATER", "GHOST"],
+      "baseStats": {
+        "hp": 60,
+        "attack": 50,
+        "defense": 65,
+        "spAttack": 85,
+        "spDefense": 70,
+        "speed": 90
+      }
+    },
+    {
+      "id": "009",
+      "name": "Phantide",
+      "types": ["WATER", "GHOST"],
+      "baseStats": {
+        "hp": 80,
+        "attack": 60,
+        "defense": 80,
+        "spAttack": 115,
+        "spDefense": 90,
+        "speed": 110
       }
     }
   ]
