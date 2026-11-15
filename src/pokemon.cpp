@@ -26,6 +26,12 @@ enum class MoveCategory {
     STAT_CHANGE
 };
 
+//learnable moves by a pokemon specie
+struct LearnableMove {
+    string moveID;
+    int level;
+};
+
 // Pokemon types
 enum class PokemonType {
     FIRE,
@@ -50,6 +56,7 @@ enum class PokemonType {
 
 // Move information
 struct Move {
+    string id;
     string name;
     MoveCategory category;
     PokemonType type;
@@ -57,6 +64,9 @@ struct Move {
     int power;
     int accuracy;
     int pp;
+
+    string effect;
+    int effectChance;
 };
 
 // Species information
@@ -66,6 +76,7 @@ struct PokemonSpecies {
     vector<PokemonType> types;
 
     Stats baseStats;
+    vector<LearnableMove> learnableMoves;
 };
 
 // Individual Pokemon

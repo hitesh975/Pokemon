@@ -11,8 +11,16 @@
         "spAttack": 65,
         "spDefense": 45,
         "speed": 65
-      }
+      },
+      "learnableMoves": [
+        { "level": 1, "moveID": "tackle" },
+        { "level": 1, "moveID": "growl" },
+        { "level": 5, "moveID": "ember" },
+        { "level": 10, "moveID": "fire_fang" },
+        { "level": 18, "moveID": "flamethrower" }
+      ]
     },
+
     {
       "id": "002",
       "name": "Flarecoil",
@@ -24,8 +32,16 @@
         "spAttack": 85,
         "spDefense": 60,
         "speed": 80
-      }
+      },
+      "learnableMoves": [
+        { "level": 1, "moveID": "tackle" },
+        { "level": 1, "moveID": "ember" },
+        { "level": 8, "moveID": "fire_fang" },
+        { "level": 14, "moveID": "growl" },
+        { "level": 22, "moveID": "flamethrower" }
+      ]
     },
+
     {
       "id": "003",
       "name": "Soryum",
@@ -37,46 +53,14 @@
         "spAttack": 125,
         "spDefense": 95,
         "speed": 120
-      }
-    },
-    {
-      "id": "004",
-      "name": "Branling",
-      "types": ["GRASS"],
-      "baseStats": {
-        "hp": 50,
-        "attack": 55,
-        "defense": 55,
-        "spAttack": 35,
-        "spDefense": 55,
-        "speed": 40
-      }
-    },
-    {
-      "id": "005",
-      "name": "Bramrook",
-      "types": ["GRASS"],
-      "baseStats": {
-        "hp": 70,
-        "attack": 75,
-        "defense": 75,
-        "spAttack": 45,
-        "spDefense": 70,
-        "speed": 50
-      }
-    },
-    {
-      "id": "006",
-      "name": "Thornbough",
-      "types": ["GRASS"],
-      "baseStats": {
-        "hp": 95,
-        "attack": 110,
-        "defense": 105,
-        "spAttack": 60,
-        "spDefense": 95,
-        "speed": 65
-      }
+      },
+      "learnableMoves": [
+        { "level": 1, "moveID": "ember" },
+        { "level": 1, "moveID": "fire_fang" },
+        { "level": 10, "moveID": "flamethrower" },
+        { "level": 18, "moveID": "tackle" },
+        { "level": 26, "moveID": "growl" }
+      ]
     },
 
     {
@@ -90,8 +74,17 @@
         "spAttack": 65,
         "spDefense": 60,
         "speed": 52
-      }
+      },
+      "learnableMoves": [
+        { "level": 1, "moveID": "tackle" },
+        { "level": 1, "moveID": "growl" },
+        { "level": 5, "moveID": "vine_whip" },
+        { "level": 10, "moveID": "confusion" },
+        { "level": 18, "moveID": "razor_leaf" },
+        { "level": 25, "moveID": "psychic" }
+      ]
     },
+
     {
       "id": "005",
       "name": "Thornveil",
@@ -103,8 +96,16 @@
         "spAttack": 85,
         "spDefense": 78,
         "speed": 65
-      }
+      },
+      "learnableMoves": [
+        { "level": 1, "moveID": "vine_whip" },
+        { "level": 1, "moveID": "confusion" },
+        { "level": 8, "moveID": "razor_leaf" },
+        { "level": 15, "moveID": "psychic" },
+        { "level": 22, "moveID": "growl" }
+      ]
     },
+
     {
       "id": "006",
       "name": "Mytheroot",
@@ -116,8 +117,16 @@
         "spAttack": 115,
         "spDefense": 100,
         "speed": 90
-      }
+      },
+      "learnableMoves": [
+        { "level": 1, "moveID": "razor_leaf" },
+        { "level": 1, "moveID": "confusion" },
+        { "level": 10, "moveID": "psychic" },
+        { "level": 18, "moveID": "vine_whip" },
+        { "level": 26, "moveID": "growl" }
+      ]
     },
+
     {
       "id": "007",
       "name": "Wispfin",
@@ -129,8 +138,16 @@
         "spAttack": 65,
         "spDefense": 55,
         "speed": 65
-      }
+      },
+      "learnableMoves": [
+        { "level": 1, "moveID": "tackle" },
+        { "level": 1, "moveID": "lick" },
+        { "level": 5, "moveID": "water_gun" },
+        { "level": 10, "moveID": "confuse_ray" },
+        { "level": 18, "moveID": "shadow_ball" }
+      ]
     },
+
     {
       "id": "008",
       "name": "Gloamray",
@@ -142,8 +159,16 @@
         "spAttack": 85,
         "spDefense": 70,
         "speed": 90
-      }
+      },
+      "learnableMoves": [
+        { "level": 1, "moveID": "water_gun" },
+        { "level": 1, "moveID": "lick" },
+        { "level": 8, "moveID": "bubble_beam" },
+        { "level": 15, "moveID": "confuse_ray" },
+        { "level": 22, "moveID": "shadow_ball" }
+      ]
     },
+
     {
       "id": "009",
       "name": "Phantide",
@@ -155,7 +180,14 @@
         "spAttack": 115,
         "spDefense": 90,
         "speed": 110
-      }
+      },
+      "learnableMoves": [
+        { "level": 1, "moveID": "bubble_beam" },
+        { "level": 1, "moveID": "confuse_ray" },
+        { "level": 10, "moveID": "shadow_ball" },
+        { "level": 18, "moveID": "water_gun" },
+        { "level": 26, "moveID": "lick" }
+      ]
     }
   ]
 }

@@ -1,0 +1,169 @@
+{
+  "moves": [
+    {
+      "id": "tackle",
+      "name": "Tackle",
+      "category": "PHYSICAL",
+      "type": "NORMAL",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 35,
+      "effect": "",
+      "effectChance": 0
+    },
+    {
+      "id": "growl",
+      "name": "Growl",
+      "category": "STATUS",
+      "type": "NORMAL",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 40,
+      "effect": "LOWER_ATTACK",
+      "effectChance": 100
+    },
+    {
+      "id": "scratch",
+      "name": "Scratch",
+      "category": "PHYSICAL",
+      "type": "NORMAL",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 35,
+      "effect": "",
+      "effectChance": 0
+    },
+    {
+      "id": "ember",
+      "name": "Ember",
+      "category": "SPECIAL",
+      "type": "FIRE",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 25,
+      "effect": "BURN",
+      "effectChance": 10
+    },
+    {
+      "id": "fire_fang",
+      "name": "Fire Fang",
+      "category": "PHYSICAL",
+      "type": "FIRE",
+      "power": 65,
+      "accuracy": 95,
+      "pp": 15,
+      "effect": "BURN",
+      "effectChance": 10
+    },
+    {
+      "id": "flamethrower",
+      "name": "Flamethrower",
+      "category": "SPECIAL",
+      "type": "FIRE",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 15,
+      "effect": "BURN",
+      "effectChance": 10
+    },
+    {
+      "id": "vine_whip",
+      "name": "Vine Whip",
+      "category": "PHYSICAL",
+      "type": "GRASS",
+      "power": 45,
+      "accuracy": 100,
+      "pp": 25,
+      "effect": "",
+      "effectChance": 0
+    },
+    {
+      "id": "razor_leaf",
+      "name": "Razor Leaf",
+      "category": "PHYSICAL",
+      "type": "GRASS",
+      "power": 55,
+      "accuracy": 95,
+      "pp": 25,
+      "effect": "HIGH_CRITICAL",
+      "effectChance": 100
+    },
+    {
+      "id": "psychic",
+      "name": "Psychic",
+      "category": "SPECIAL",
+      "type": "PSYCHIC",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": "LOWER_SP_DEFENSE",
+      "effectChance": 10
+    },
+    {
+      "id": "confusion",
+      "name": "Confusion",
+      "category": "SPECIAL",
+      "type": "PSYCHIC",
+      "power": 50,
+      "accuracy": 100,
+      "pp": 25,
+      "effect": "CONFUSE",
+      "effectChance": 10
+    },
+    {
+      "id": "water_gun",
+      "name": "Water Gun",
+      "category": "SPECIAL",
+      "type": "WATER",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 25,
+      "effect": "",
+      "effectChance": 0
+    },
+    {
+      "id": "bubble_beam",
+      "name": "Bubble Beam",
+      "category": "SPECIAL",
+      "type": "WATER",
+      "power": 65,
+      "accuracy": 100,
+      "pp": 20,
+      "effect": "LOWER_SPEED",
+      "effectChance": 10
+    },
+    {
+      "id": "shadow_ball",
+      "name": "Shadow Ball",
+      "category": "SPECIAL",
+      "type": "GHOST",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 15,
+      "effect": "LOWER_SP_DEFENSE",
+      "effectChance": 20
+    },
+    {
+      "id": "lick",
+      "name": "Lick",
+      "category": "PHYSICAL",
+      "type": "GHOST",
+      "power": 30,
+      "accuracy": 100,
+      "pp": 30,
+      "effect": "PARALYZE",
+      "effectChance": 30
+    },
+    {
+      "id": "confuse_ray",
+      "name": "Confuse Ray",
+      "category": "STATUS",
+      "type": "GHOST",
+      "power": 0,
+      "accuracy": 100,
+      "pp": 10,
+      "effect": "CONFUSE",
+      "effectChance": 100
+    }
+  ]
+}
