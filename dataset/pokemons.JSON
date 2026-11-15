@@ -1,0 +1,121 @@
+{
+  "species": [
+    {
+      "id": "001",
+      "name": "Cindercub",
+      "types": ["FIRE"],
+      "baseStats": {
+        "hp": 45,
+        "attack": 55,
+        "defense": 40,
+        "spAttack": 65,
+        "spDefense": 45,
+        "speed": 65
+      }
+    },
+    {
+      "id": "002",
+      "name": "Flarecoil",
+      "types": ["FIRE"],
+      "baseStats": {
+        "hp": 65,
+        "attack": 75,
+        "defense": 60,
+        "spAttack": 85,
+        "spDefense": 60,
+        "speed": 80
+      }
+    },
+    {
+      "id": "003",
+      "name": "Soryum",
+      "types": ["FIRE", "DRAGON"],
+      "baseStats": {
+        "hp": 85,
+        "attack": 110,
+        "defense": 80,
+        "spAttack": 125,
+        "spDefense": 95,
+        "speed": 120
+      }
+    },
+    {
+      "id": "004",
+      "name": "Branling",
+      "types": ["GRASS"],
+      "baseStats": {
+        "hp": 50,
+        "attack": 55,
+        "defense": 55,
+        "spAttack": 35,
+        "spDefense": 55,
+        "speed": 40
+      }
+    },
+    {
+      "id": "005",
+      "name": "Bramrook",
+      "types": ["GRASS"],
+      "baseStats": {
+        "hp": 70,
+        "attack": 75,
+        "defense": 75,
+        "spAttack": 45,
+        "spDefense": 70,
+        "speed": 50
+      }
+    },
+    {
+      "id": "006",
+      "name": "Thornbough",
+      "types": ["GRASS"],
+      "baseStats": {
+        "hp": 95,
+        "attack": 110,
+        "defense": 105,
+        "spAttack": 60,
+        "spDefense": 95,
+        "speed": 65
+      }
+    },
+    {
+      "id": "004",
+      "name": "Barkbudd",
+      "types": ["GRASS", "ROCK"],
+      "baseStats": {
+        "hp": 50,
+        "attack": 60,
+        "defense": 65,
+        "spAttack": 35,
+        "spDefense": 55,
+        "speed": 35
+      }
+    },
+    {
+      "id": "005",
+      "name": "Rubblebark",
+      "types": ["GRASS", "ROCK"],
+      "baseStats": {
+        "hp": 70,
+        "attack": 85,
+        "defense": 90,
+        "spAttack": 45,
+        "spDefense": 75,
+        "speed": 45
+      }
+    },
+    {
+      "id": "006",
+      "name": "Terracrown",
+      "types": ["GRASS", "ROCK"],
+      "baseStats": {
+        "hp": 95,
+        "attack": 115,
+        "defense": 115,
+        "spAttack": 55,
+        "spDefense": 105,
+        "speed": 55
+      }
+    }
+  ]
+}
