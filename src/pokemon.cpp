@@ -4,6 +4,7 @@
 #include <vector>
 #include <array>
 #include <nlohmann/json.hpp>
+#include "stats.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -47,24 +48,6 @@ enum class PokemonType {
     FAIRY
 };
 
-enum class Nature {
-    HARDY,
-    ADAMANT,
-    MODEST,
-    JOLLY,
-    BOLD
-};
-
-// Pokemon stats
-struct Stats {
-    int hp;
-    int attack;
-    int defense;
-    int spAttack;
-    int spDefense;
-    int speed;
-};
-
 // Move information
 struct Move {
     string name;
@@ -80,7 +63,7 @@ struct Move {
 struct PokemonSpecies {
     string id;
     string name;
-    PokemonType type;
+    vector<PokemonType> types;
 
     Stats baseStats;
 };
