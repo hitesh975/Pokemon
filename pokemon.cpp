@@ -8,9 +8,10 @@
 using namespace std;
 using json = nlohmann::json;
 
-
 // Move IDs
 enum class MoveID {
+    EMBER,
+    QUICK_ATTACK,
     THUNDERBOLT,
     THUNDER_WAVE,
     RECOVER,
@@ -24,13 +25,12 @@ enum class MoveCategory {
     STAT_CHANGE
 };
 
-
 // Pokemon types
 enum class PokemonType {
-    ELECTRIC,
     FIRE,
     WATER,
     GRASS,
+    ELECTRIC,
     NORMAL,
     FLYING,
     PSYCHIC,
@@ -55,8 +55,7 @@ enum class Nature {
     BOLD
 };
 
-
-// All six Pokemon stats
+// Pokemon stats
 struct Stats {
     int hp;
     int attack;
@@ -65,7 +64,6 @@ struct Stats {
     int spDefense;
     int speed;
 };
-
 
 // Move information
 struct Move {
@@ -78,19 +76,17 @@ struct Move {
     int pp;
 };
 
-
-// Base information for each Pokemon species
+// Species information
 struct PokemonSpecies {
+    string id;
     string name;
     PokemonType type;
 
     Stats baseStats;
 };
 
-
-// An individual Pokemon
+// Individual Pokemon
 struct Pokemon {
-    string nickname;
     string speciesID;
 
     int level;
@@ -105,8 +101,7 @@ struct Pokemon {
     array<MoveID, 4> learnedMoves;
 };
 
-
-// Stats that can change during battle
+// Battle information
 struct BattleState {
     int currentHP;
 
@@ -116,7 +111,6 @@ struct BattleState {
     int spDefenseStage = 0;
     int speedStage = 0;
 };
-
 
 int main() {
 
