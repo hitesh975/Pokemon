@@ -3,7 +3,6 @@
 #include <fstream>
 #include <stdexcept>
 #include "loadmoves.h"
-#include <iostream>
 #include <unordered_map>
 #include <string>
 

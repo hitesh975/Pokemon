@@ -50,3 +50,34 @@ struct Move {
     std::string effect;
     int effectChance;
 };
+
+struct Stats {
+    int hp;
+    int attack;
+    int defense;
+    int spAttack;
+    int spDefense;
+    int speed;
+};
+
+// Pokemon types
+enum class PokemonType {
+    FIRE,
+    WATER,
+    GRASS,
+    ELECTRIC,
+    NORMAL,
+    FLYING,
+    PSYCHIC,
+    GROUND,
+    ROCK,
+    ICE,
+    BUG,
+    POISON,
+    FIGHTING,
+    GHOST,
+    DRAGON,
+    DARK,
+    STEEL,
+    FAIRY
+};

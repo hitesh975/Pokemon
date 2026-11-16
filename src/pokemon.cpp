@@ -7,22 +7,11 @@
 #include "stats.h"
 #include "moves.h"
 #include "loadmoves.h"
+#include "pokemons.h"
 
 using namespace std;
 using json = nlohmann::json;
 
-
-
-
-// Species information
-struct PokemonSpecies {
-    string id;
-    string name;
-    vector<PokemonType> types;
-
-    Stats baseStats;
-    vector<LearnableMove> learnableMoves;
-};
 
 // Individual Pokemon
 struct Pokemon {
