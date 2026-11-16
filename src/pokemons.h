@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include "stats.h"
+#include "moves.h"
 
 // Species information
 struct PokemonSpecies {

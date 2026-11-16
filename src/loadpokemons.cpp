@@ -6,6 +6,10 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "stats.h"
+#include "moves.h"
+#include "loadpokemons.h"
+
 
 #include "pokemons.h"
 
