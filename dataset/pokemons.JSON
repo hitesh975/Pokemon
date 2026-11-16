@@ -66,7 +66,7 @@
     {
       "id": "004",
       "name": "Sprigmite",
-      "types": ["GRASS", "PSYCHIC"],
+      "types": ["GRASS"],
       "baseStats": {
         "hp": 50,
         "attack": 45,
@@ -130,7 +130,7 @@
     {
       "id": "007",
       "name": "Wispfin",
-      "types": ["WATER", "GHOST"],
+      "types": ["WATER"],
       "baseStats": {
         "hp": 45,
         "attack": 40,
