@@ -65,7 +65,7 @@ PokemonType stringToPokemonType(const std::string& typeStr) {
 }
 
 std::unordered_map<std::string, Move> loadMoves() {
-    std::ifstream file("moves.json");
+    std::ifstream file("dataset/moves.json");
 
     json moveData = json::parse(file);
 
