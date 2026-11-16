@@ -2,76 +2,41 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <stdexcept>
-#include "loadmoves.h"
 #include <unordered_map>
 #include <string>
+#include <vector>
+
+#include "loadmoves.h"
 
 using json = nlohmann::json;
 
-MoveCategory stringToMoveCategory(const std::string& categoryStr) {
-    if (categoryStr == "DAMAGE") {
-        return MoveCategory::DAMAGE;
-    } else if (categoryStr == "STATUS") {
-        return MoveCategory::STATUS;
-    } else if (categoryStr == "HEAL") {
-        return MoveCategory::HEAL;
-    } else if (categoryStr == "STAT_CHANGE") {
-        return MoveCategory::STAT_CHANGE;
-    } else {
-        throw std::invalid_argument("Invalid move category: " + categoryStr);
-    }
-}
+std::unordered_map<std::string, Move> loadMoves(const std::string& filePath) {
+    const std::vector<std::string> candidatePaths = {
+        filePath,
+        "dataset/moves.JSON",
+        "dataset/moves.json"
+    };
 
-PokemonType stringToPokemonType(const std::string& typeStr) {
-    if (typeStr == "FIRE") {
-        return PokemonType::FIRE;
-    } else if (typeStr == "WATER") {
-        return PokemonType::WATER;
-    } else if (typeStr == "GRASS") {
-        return PokemonType::GRASS;
-    } else if (typeStr == "ELECTRIC") {
-        return PokemonType::ELECTRIC;
-    } else if (typeStr == "NORMAL") {
-        return PokemonType::NORMAL;
-    } else if (typeStr == "FLYING") {
-        return PokemonType::FLYING;
-    } else if (typeStr == "PSYCHIC") {
-        return PokemonType::PSYCHIC;
-    } else if (typeStr == "GROUND") {
-        return PokemonType::GROUND;
-    } else if (typeStr == "ROCK") {
-        return PokemonType::ROCK;
-    } else if (typeStr == "ICE") {
-        return PokemonType::ICE;
-    } else if (typeStr == "BUG") {
-        return PokemonType::BUG;
-    } else if (typeStr == "POISON") {
-        return PokemonType::POISON;
-    } else if (typeStr == "FIGHTING") {
-        return PokemonType::FIGHTING;
-    } else if (typeStr == "GHOST") {
-        return PokemonType::GHOST;
-    } else if (typeStr == "DRAGON") {
-        return PokemonType::DRAGON;
-    } else if (typeStr == "DARK") {
-        return PokemonType::DARK;
-    } else if (typeStr == "STEEL") {
-        return PokemonType::STEEL;
-    } else if (typeStr == "FAIRY") {
-        return PokemonType::FAIRY;
-    } else {
-        throw std::invalid_argument("Invalid Pokémon type: " + typeStr);
+    std::ifstream file;
+    bool opened = false;
+    for (const auto& path : candidatePaths) {
+        if (path.empty()) continue;
+        file.open(path);
+        if (file.is_open()) {
+            opened = true;
+            break;
+        }
     }
-}
 
-std::unordered_map<std::string, Move> loadMoves() {
-    std::ifstream file("dataset/moves.json");
+    if (!opened) {
+        throw std::runtime_error("Could not open move dataset file");
+    }
 
     json moveData = json::parse(file);
 
     std::unordered_map<std::string, Move> moves;
 
-    for (const auto& entry: moveData["moves"] ) {
+    for (const auto& entry : moveData["moves"]) {
         Move move;
         move.id = entry["id"].get<std::string>();
         move.name = entry["name"].get<std::string>();

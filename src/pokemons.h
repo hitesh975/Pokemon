@@ -1,16 +1,19 @@
-#include "moves.h"
-#include <string>
-#include <vector>
 #pragma once
 
-using namespace std;
+#include <string>
+#include <vector>
+#include <unordered_map>
+
+#include "moves.h"
 
 // Species information
 struct PokemonSpecies {
-    string id;
-    string name;
-    vector<PokemonType> types;
+    std::string id;
+    std::string name;
+    std::vector<PokemonType> types;
 
     Stats baseStats;
-    vector<LearnableMove> learnableMoves;
+    std::vector<LearnableMove> learnableMoves;
 };
+
+std::unordered_map<std::string, PokemonSpecies> loadPokemonSpeciesFromJson();

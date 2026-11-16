@@ -5,40 +5,31 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "pokemons.h"
 
 using json = nlohmann::json;
 
-PokemonType stringToPokemonType(const std::string& typeStr) {
-    if (typeStr == "FIRE") return PokemonType::FIRE;
-    else if (typeStr == "WATER") return PokemonType::WATER;
-    else if (typeStr == "GRASS") return PokemonType::GRASS;
-    else if (typeStr == "ELECTRIC") return PokemonType::ELECTRIC;
-    else if (typeStr == "NORMAL") return PokemonType::NORMAL;
-    else if (typeStr == "FLYING") return PokemonType::FLYING;
-    else if (typeStr == "PSYCHIC") return PokemonType::PSYCHIC;
-    else if (typeStr == "GROUND") return PokemonType::GROUND;
-    else if (typeStr == "ROCK") return PokemonType::ROCK;
-    else if (typeStr == "ICE") return PokemonType::ICE;
-    else if (typeStr == "BUG") return PokemonType::BUG;
-    else if (typeStr == "POISON") return PokemonType::POISON;
-    else if (typeStr == "FIGHTING") return PokemonType::FIGHTING;
-    else if (typeStr == "GHOST") return PokemonType::GHOST;
-    else if (typeStr == "DRAGON") return PokemonType::DRAGON;
-    else if (typeStr == "DARK") return PokemonType::DARK;
-    else if (typeStr == "STEEL") return PokemonType::STEEL;
-    else if (typeStr == "FAIRY") return PokemonType::FAIRY;
-
-    throw std::invalid_argument("Invalid Pokemon type: " + typeStr);
-}
-
 std::unordered_map<std::string, PokemonSpecies> loadPokemonSpeciesFromJson() {
 
-    std::ifstream file("dataset/pokemons.json");
+    const std::vector<std::string> candidatePaths = {
+        "dataset/pokemons.JSON",
+        "dataset/pokemons.json"
+    };
 
-    if (!file.is_open()) {
-        throw std::runtime_error("Could not open dataset/pokemons.json");
+    std::ifstream file;
+    bool opened = false;
+    for (const auto& path : candidatePaths) {
+        file.open(path);
+        if (file.is_open()) {
+            opened = true;
+            break;
+        }
+    }
+
+    if (!opened) {
+        throw std::runtime_error("Could not open pokemon dataset file");
     }
 
     json pokemonData = json::parse(file);
