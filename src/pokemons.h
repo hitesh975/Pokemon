@@ -1,4 +1,9 @@
 #include "moves.h"
+#include <string>
+#include <vector>
+#pragma once
+
+using namespace std;
 
 // Species information
 struct PokemonSpecies {

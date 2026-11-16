@@ -10,19 +10,39 @@
 
 using json = nlohmann::json;
 
+PokemonType stringToPokemonType(const std::string& typeStr) {
+    if (typeStr == "FIRE") return PokemonType::FIRE;
+    else if (typeStr == "WATER") return PokemonType::WATER;
+    else if (typeStr == "GRASS") return PokemonType::GRASS;
+    else if (typeStr == "ELECTRIC") return PokemonType::ELECTRIC;
+    else if (typeStr == "NORMAL") return PokemonType::NORMAL;
+    else if (typeStr == "FLYING") return PokemonType::FLYING;
+    else if (typeStr == "PSYCHIC") return PokemonType::PSYCHIC;
+    else if (typeStr == "GROUND") return PokemonType::GROUND;
+    else if (typeStr == "ROCK") return PokemonType::ROCK;
+    else if (typeStr == "ICE") return PokemonType::ICE;
+    else if (typeStr == "BUG") return PokemonType::BUG;
+    else if (typeStr == "POISON") return PokemonType::POISON;
+    else if (typeStr == "FIGHTING") return PokemonType::FIGHTING;
+    else if (typeStr == "GHOST") return PokemonType::GHOST;
+    else if (typeStr == "DRAGON") return PokemonType::DRAGON;
+    else if (typeStr == "DARK") return PokemonType::DARK;
+    else if (typeStr == "STEEL") return PokemonType::STEEL;
+    else if (typeStr == "FAIRY") return PokemonType::FAIRY;
+
+    throw std::invalid_argument("Invalid Pokemon type: " + typeStr);
+}
+
 std::unordered_map<std::string, PokemonSpecies> loadPokemonSpeciesFromJson() {
 
-    std::ifstream file("pokemons.json");
+    std::ifstream file("dataset/pokemons.json");
 
-    // Check whether the file opened successfully
     if (!file.is_open()) {
-        throw std::runtime_error("Could not open pokemons.json");
+        throw std::runtime_error("Could not open dataset/pokemons.json");
     }
 
-    // Parse JSON
     json pokemonData = json::parse(file);
 
-    // Check that the species array exists
     if (!pokemonData.contains("species") || !pokemonData["species"].is_array()) {
         throw std::runtime_error("Invalid pokemons.json: missing species array");
     }
@@ -38,13 +58,9 @@ std::unordered_map<std::string, PokemonSpecies> loadPokemonSpeciesFromJson() {
 
         // Parse types
         for (const auto& type : entry.at("types")) {
-            int typeValue = type.get<int>();
-
-            if (typeValue < 0 || typeValue >= 18) {
-                throw std::runtime_error("Invalid PokemonType value in species: " + species.id);
-            }
-
-            species.types.push_back(static_cast<PokemonType>(typeValue));
+            species.types.push_back(
+                stringToPokemonType(type.get<std::string>())
+            );
         }
 
         // Parse base stats
