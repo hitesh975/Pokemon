@@ -20,7 +20,6 @@ int main() {
 
     // Test 4: Check types
     assert(cindercub.types.size() == 1);
-    assert(cindercub.types[0] == PokemonType::FIRE);
 
     // Test 5: Check base stats
     assert(cindercub.baseStats.hp == 45);

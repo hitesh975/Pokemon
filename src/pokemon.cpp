@@ -1,13 +1,9 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 #include <array>
 #include <nlohmann/json.hpp>
 #include "stats.h"
-#include "moves.h"
-#include "loadmoves.h"
-#include "pokemons.h"
 
 using namespace std;
 using json = nlohmann::json;
