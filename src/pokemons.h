@@ -4,8 +4,6 @@
 #include <vector>
 #include <unordered_map>
 
-#include "moves.h"
-
 // Species information
 struct PokemonSpecies {
     std::string id;

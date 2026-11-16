@@ -2,7 +2,6 @@
 
 #include <stdexcept>
 #include <string>
-#include "stats.h"
 
 enum class MoveCategory {
     DAMAGE,
