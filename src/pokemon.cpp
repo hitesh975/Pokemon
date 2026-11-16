@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 #include "stats.h"
 #include "moves.h"
+#include "loadmoves.h"
 
 using namespace std;
 using json = nlohmann::json;

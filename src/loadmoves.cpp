@@ -4,5 +4,5 @@
 #include <array>
 #include <nlohmann/json.hpp>
 #include "moves.h"
-
+#include "loadmoves.h"
 
