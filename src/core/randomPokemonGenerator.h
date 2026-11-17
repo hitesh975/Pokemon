@@ -40,6 +40,12 @@ class pokemonGenerator {
         std::vector<std::string> generateLearnedMoves(
         const PokemonSpecies& species,
         int level
-    );
+        );
+
+        const Stats& getBaseStats(const std::string& speciesID) const;
+
+        Stats calculateStats(const Stats& baseStats, const Stats& ivs, const Stats& evs, int level, Nature nature);
+
+    
 };
 

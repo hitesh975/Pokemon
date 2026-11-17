@@ -4,6 +4,7 @@
 #include "randomPokemonGenerator.h"
 #include <random>
 #include "moves.h"
+#include "stats.h"
 
 using namespace std;
 
@@ -89,4 +90,27 @@ std::vector<std::string> pokemonGenerator::generateLearnedMoves(const PokemonSpe
     }
 
     return learnedMoves;
+}
+
+//get base stats
+const Stats& pokemonGenerator::getBaseStats(
+    const std::string& speciesID) const {
+        // Implementation for retrieving base stats based on speciesID
+        // This function should look up the species in the database and return its base stats
+        const auto& species = database.getPokemon(speciesID);
+        return species.baseStats;
+    }
+
+
+//calculate stats
+
+Stats pokemonGenerator::calculateStats(
+    const Stats& baseStats,
+    const Stats& ivs,
+    const Stats& evs,
+    int level,
+    Nature nature
+) {
+
+    return calculateStats(baseStats, ivs, evs, level, nature);
 }
