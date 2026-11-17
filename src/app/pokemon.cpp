@@ -9,21 +9,7 @@ using namespace std;
 using json = nlohmann::json;
 
 
-// Individual Pokemon
-struct Pokemon {
-    string speciesID;
 
-    int level;
-    int experience;
-    int friendship;
-
-    Nature nature;
-
-    Stats ivs;
-    Stats evs;
-
-    array<string, 4> learnedMoves;
-};
 
 // Battle information
 struct BattleState {
