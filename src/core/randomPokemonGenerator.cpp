@@ -29,6 +29,28 @@ Pokemon pokemonGenerator::generateRandomPokemon(const vector<PokemonSpecies>& po
 
     //random moves generation
     std::vector<std::string> learnedMoves = generateLearnedMoves(randomSpecies, level);
+
+    //base stats
+    const Stats &baseStats = getBaseStats(randomSpecies.id);
+
+    //calculated stats
+    const Stats evs = {0, 0, 0, 0, 0, 0};
+    const Stats calculatedStats = calculateStats(baseStats, ivs, evs, level, nature);
+
+    //assemble everything
+    Pokemon pokemon;
+
+    pokemon.speciesID = randomSpecies.id;
+    pokemon.level = level;
+    pokemon.experience = 0;
+    pokemon.friendship = 50;
+    pokemon.nature = nature;
+    pokemon.ivs = ivs;
+    pokemon.evs = evs;
+    pokemon.calculatedStats = calculatedStats;
+    pokemon.learnedMoves = learnedMoves;
+
+    return pokemon;
 }
 
 
@@ -77,16 +99,17 @@ int pokemonGenerator::generateLevel() {
 }
 
 std::vector<std::string> pokemonGenerator::generateLearnedMoves(const PokemonSpecies& species, int level) {
-    // Implementation for generating learned moves
     std::vector<std::string> learnedMoves;
-    // Add logic here to generate learned moves based on species and level
     const auto& learnableMoves = species.learnableMoves;
 
-    //find the highest level move that the pokemon can learn
     for (const auto& move : learnableMoves) {
-        if (move.level <= level && learnedMoves.size() < 4) {
+        if (move.level <= level) {
             learnedMoves.push_back(move.moveID);
         }
+    }
+
+    if (learnedMoves.size() > 4) {
+        learnedMoves.erase(learnedMoves.begin(), learnedMoves.end() - 4);
     }
 
     return learnedMoves;
@@ -111,5 +134,5 @@ Stats pokemonGenerator::calculateStats(
     Nature nature
 ) {
 
-    return calculateStats(baseStats, ivs, evs, level, nature);
+    return ::calculateStats(baseStats, ivs, evs, level, nature);
 }

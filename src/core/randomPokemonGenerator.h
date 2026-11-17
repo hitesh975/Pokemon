@@ -1,10 +1,9 @@
 // Individual Pokemon
 #include <string>
-#include <array>
 #include "stats.h"
 #include <vector>
 #include "pokemons.h"
-#include "./data/gameDataBase.h"
+#include "../data/gameDataBase.h"
 #include <random>
 using namespace std;
 
@@ -19,8 +18,9 @@ struct Pokemon {
 
     Stats ivs;
     Stats evs;
+    Stats calculatedStats;
 
-    array<string, 4> learnedMoves;
+    vector<string> learnedMoves;
 };
 
 class pokemonGenerator {

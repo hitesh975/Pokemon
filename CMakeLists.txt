@@ -32,3 +32,15 @@ add_executable(test_pokemons
 
 target_include_directories(test_pokemons PRIVATE src/core src/data)
 target_link_libraries(test_pokemons PRIVATE nlohmann_json::nlohmann_json)
+
+add_executable(test_random_pokemon
+    src/tests/test_randomPokemonGenerator.cpp
+    src/core/randomPokemonGenerator.cpp
+    src/core/calculateStats.cpp
+    src/data/gameDataBase.cpp
+    src/data/loadpokemons.cpp
+    src/data/loadmoves.cpp
+)
+
+target_include_directories(test_random_pokemon PRIVATE src/core src/data)
+target_link_libraries(test_random_pokemon PRIVATE nlohmann_json::nlohmann_json)
