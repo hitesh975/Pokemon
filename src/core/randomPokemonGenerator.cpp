@@ -12,10 +12,11 @@ pokemonGenerator::pokemonGenerator(const GameDataBase& database)
     : database(database), randomEngine(std::random_device{}()) {
 }
 
-Pokemon pokemonGenerator::generateRandomPokemon(const vector<PokemonSpecies>& pokemonList) {
+Pokemon pokemonGenerator::generateRandomPokemon(const vector<const PokemonSpecies*>& pokemonList) {
     
     //random species selection
-    const PokemonSpecies& randomSpecies = pokemonList[randomEngine() % pokemonList.size()];
+    const PokemonSpecies& randomSpecies =
+    *pokemonList[randomEngine() % pokemonList.size()];
 
     //random IVs generation
     Stats ivs = generateIVs();
@@ -28,7 +29,7 @@ Pokemon pokemonGenerator::generateRandomPokemon(const vector<PokemonSpecies>& po
 
 
     //random moves generation
-    std::vector<std::string> learnedMoves = generateLearnedMoves(randomSpecies, level);
+    std::vector<PokemonMove> learnedMoves = generateLearnedMoves(randomSpecies, level);
 
     //base stats
     const Stats &baseStats = getBaseStats(randomSpecies.id);
@@ -48,6 +49,7 @@ Pokemon pokemonGenerator::generateRandomPokemon(const vector<PokemonSpecies>& po
     pokemon.ivs = ivs;
     pokemon.evs = evs;
     pokemon.calculatedStats = calculatedStats;
+    pokemon.currentHP = calculatedStats.hp;
     pokemon.learnedMoves = learnedMoves;
 
     return pokemon;
@@ -98,13 +100,13 @@ int pokemonGenerator::generateLevel() {
     return level;
 }
 
-std::vector<std::string> pokemonGenerator::generateLearnedMoves(const PokemonSpecies& species, int level) {
-    std::vector<std::string> learnedMoves;
+std::vector<PokemonMove> pokemonGenerator::generateLearnedMoves(const PokemonSpecies& species, int level) {
+    std::vector<PokemonMove> learnedMoves;
     const auto& learnableMoves = species.learnableMoves;
 
     for (const auto& move : learnableMoves) {
         if (move.level <= level) {
-            learnedMoves.push_back(move.moveID);
+            learnedMoves.push_back({move.moveID, database.getMove(move.moveID).pp});
         }
     }
 
@@ -123,8 +125,6 @@ const Stats& pokemonGenerator::getBaseStats(
         return species.baseStats;
     }
 
-
-//calculate stats
 
 Stats pokemonGenerator::calculateStats(
     const Stats& baseStats,

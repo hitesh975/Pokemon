@@ -7,6 +7,11 @@
 #include <random>
 using namespace std;
 
+struct PokemonMove {
+    std::string moveID;
+    int currentPP;
+};
+
 struct Pokemon {
     string speciesID;
 
@@ -19,14 +24,16 @@ struct Pokemon {
     Stats ivs;
     Stats evs;
     Stats calculatedStats;
+    int currentHP;
 
-    vector<string> learnedMoves;
+    vector<PokemonMove> learnedMoves;
 };
 
 class pokemonGenerator {
     public:
         pokemonGenerator(const GameDataBase& database);
-        Pokemon generateRandomPokemon(const vector<PokemonSpecies>& pokemonList);
+        Pokemon generateRandomPokemon(
+        const std::vector<const PokemonSpecies*>& pokemonList);
 
     private:
         const GameDataBase& database;
@@ -37,7 +44,7 @@ class pokemonGenerator {
         int generateLevel();
 
 
-        std::vector<std::string> generateLearnedMoves(
+        std::vector<PokemonMove> generateLearnedMoves(
         const PokemonSpecies& species,
         int level
         );

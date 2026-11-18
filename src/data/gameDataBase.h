@@ -11,6 +11,8 @@ class GameDataBase {
 
         const PokemonSpecies& getPokemon(const std::string& id) const;
 
+        const std::unordered_map<std::string, PokemonSpecies>& getAllPokemons() const;
+
     private:
         std::unordered_map<std::string, Move> moves;
 

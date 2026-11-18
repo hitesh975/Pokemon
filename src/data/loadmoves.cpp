@@ -42,6 +42,7 @@ std::unordered_map<std::string, Move> loadMoves(const std::string& filePath) {
         move.name = entry["name"].get<std::string>();
         move.power = entry["power"].get<int>();
         move.accuracy = entry["accuracy"].get<int>();
+        move.priority = entry["priority"].get<int>();
         move.pp = entry["pp"].get<int>();
         move.effect = entry["effect"].get<std::string>();
         move.effectChance = entry["effectChance"].get<int>();

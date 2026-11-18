@@ -84,6 +84,7 @@ struct Move {
 
     int power;
     int accuracy;
+    int priority;
     int pp;
 
     std::string effect;

@@ -25,3 +25,6 @@ const PokemonSpecies& GameDataBase::getPokemon(const std::string& id) const {
     return it->second;
 }
 
+const std::unordered_map<std::string, PokemonSpecies>& GameDataBase::getAllPokemons() const {
+    return pokemons;
+}

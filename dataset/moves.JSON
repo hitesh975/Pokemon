@@ -7,6 +7,7 @@
       "type": "NORMAL",
       "power": 40,
       "accuracy": 100,
+      "priority": 0,
       "pp": 35,
       "effect": "",
       "effectChance": 0
@@ -18,6 +19,7 @@
       "type": "NORMAL",
       "power": 0,
       "accuracy": 100,
+      "priority": 0,
       "pp": 40,
       "effect": "LOWER_ATTACK",
       "effectChance": 100
@@ -29,6 +31,7 @@
       "type": "NORMAL",
       "power": 40,
       "accuracy": 100,
+      "priority": 0,
       "pp": 35,
       "effect": "",
       "effectChance": 0
@@ -40,6 +43,7 @@
       "type": "FIRE",
       "power": 40,
       "accuracy": 100,
+      "priority": 0,
       "pp": 25,
       "effect": "BURN",
       "effectChance": 10
@@ -51,6 +55,7 @@
       "type": "FIRE",
       "power": 65,
       "accuracy": 95,
+      "priority": 0,
       "pp": 15,
       "effect": "BURN",
       "effectChance": 10
@@ -62,6 +67,7 @@
       "type": "FIRE",
       "power": 90,
       "accuracy": 100,
+      "priority": 0,
       "pp": 15,
       "effect": "BURN",
       "effectChance": 10
@@ -73,6 +79,7 @@
       "type": "GRASS",
       "power": 45,
       "accuracy": 100,
+      "priority": 0,
       "pp": 25,
       "effect": "",
       "effectChance": 0
@@ -84,6 +91,7 @@
       "type": "GRASS",
       "power": 55,
       "accuracy": 95,
+      "priority": 0,
       "pp": 25,
       "effect": "HIGH_CRITICAL",
       "effectChance": 100
@@ -95,6 +103,7 @@
       "type": "PSYCHIC",
       "power": 90,
       "accuracy": 100,
+      "priority": 0,
       "pp": 10,
       "effect": "LOWER_SP_DEFENSE",
       "effectChance": 10
@@ -106,6 +115,7 @@
       "type": "PSYCHIC",
       "power": 50,
       "accuracy": 100,
+      "priority": 0,
       "pp": 25,
       "effect": "CONFUSE",
       "effectChance": 10
@@ -117,6 +127,7 @@
       "type": "WATER",
       "power": 40,
       "accuracy": 100,
+      "priority": 0,
       "pp": 25,
       "effect": "",
       "effectChance": 0
@@ -128,6 +139,7 @@
       "type": "WATER",
       "power": 65,
       "accuracy": 100,
+      "priority": 0,
       "pp": 20,
       "effect": "LOWER_SPEED",
       "effectChance": 10
@@ -139,6 +151,7 @@
       "type": "GHOST",
       "power": 80,
       "accuracy": 100,
+      "priority": 0,
       "pp": 15,
       "effect": "LOWER_SP_DEFENSE",
       "effectChance": 20
@@ -150,6 +163,7 @@
       "type": "GHOST",
       "power": 30,
       "accuracy": 100,
+      "priority": 0,
       "pp": 30,
       "effect": "PARALYZE",
       "effectChance": 30
@@ -161,6 +175,7 @@
       "type": "GHOST",
       "power": 0,
       "accuracy": 100,
+      "priority": 0,
       "pp": 10,
       "effect": "CONFUSE",
       "effectChance": 100
