@@ -1,5 +1,7 @@
 #include "battleMechanics.h"
 #include <iostream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 
@@ -35,22 +37,41 @@ TurnOrder determineTurnOrder(const Pokemon& p1, const Pokemon& p2, Move& m1, Mov
         return TurnOrder::FIRST_POKEMON;
     } else if (m1.priority < m2.priority) {
         return TurnOrder::SECOND_POKEMON;
-    } else {
-        if (p1.calculatedStats.speed > p2.calculatedStats.speed) {
-            return TurnOrder::FIRST_POKEMON;
-        } else if (p1.calculatedStats.speed < p2.calculatedStats.speed) {
-            return TurnOrder::SECOND_POKEMON;
-        } else {
-            return (rand() % 2 == 0) ? TurnOrder::FIRST_POKEMON : TurnOrder::SECOND_POKEMON;
-        }
+      } else {
+          if (p1.calculatedStats.speed > p2.calculatedStats.speed) {
+              return TurnOrder::FIRST_POKEMON;
+          } else if (p1.calculatedStats.speed < p2.calculatedStats.speed) {
+              return TurnOrder::SECOND_POKEMON;
+            } else {
+              return (rand() % 2 == 0) ? TurnOrder::FIRST_POKEMON : TurnOrder::SECOND_POKEMON;
+              }
     }
 }
 
+//get STAB
+double GetSTAB(Pokemon& P, Move& M) {
+    if (std::find(P.types.begin(), P.types.end(), M.type) != P.types.end()) {
+        return 1.5;
+    } else return 1;
+}
 
 //calculate damage
 int TextBasedBattle::calculateDamage(const Pokemon& attacker, const Pokemon& defender, const Move& move) {
 
+    //base damage = {[(2L/5 + 2) x power x (A/D)]/50} + 2
 
+    //base damage for normal moves
+    if (isPhysicalMove(move)) {
+        double BaseDamage = ((2.0 * attacker.   level / 5 + 2) * move.power * attacker.calculatedStats.attack / defender.calculatedStats.defense) / 50 + 2;
+    } else {//base damage for special moves
+        double BaseDamage = ((2.0 * attacker.level / 5 + 2) * move.power * attacker.calculatedStats.spAttack / defender.calculatedStats.spDefense) / 50 + 2;
+    }
+
+    //final damage = base damage x STAB x type effectiveness x critical x random
+    double STAB; //CALCCCCCCCCC
+    int FinalDamage = BaseDamage ; //MORE
+
+    
 }
 
 

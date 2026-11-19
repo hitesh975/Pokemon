@@ -4,6 +4,8 @@
 #include <string>
 
 enum class MoveCategory {
+    PHYSICAL,
+    SPECIAL,
     DAMAGE,
     STATUS,
     HEAL,
@@ -33,7 +35,11 @@ enum class PokemonType {
 };
 
 inline MoveCategory stringToMoveCategory(const std::string& categoryStr) {
-    if (categoryStr == "DAMAGE" || categoryStr == "PHYSICAL" || categoryStr == "SPECIAL") {
+    if (categoryStr == "PHYSICAL") {
+        return MoveCategory::PHYSICAL;
+    } else if (categoryStr == "SPECIAL") {
+        return MoveCategory::SPECIAL;
+    } else if (categoryStr == "DAMAGE") {
         return MoveCategory::DAMAGE;
     } else if (categoryStr == "STATUS") {
         return MoveCategory::STATUS;
@@ -90,4 +96,12 @@ struct Move {
     std::string effect;
     int effectChance;
 };
+
+inline bool isPhysicalMove(const Move& move) {
+    return move.category == MoveCategory::PHYSICAL;
+}
+
+inline bool isSpecialMove(const Move& move) {
+    return move.category == MoveCategory::SPECIAL;
+}
 

@@ -38,16 +38,27 @@ std::unordered_map<std::string, Move> loadMoves(const std::string& filePath) {
 
     for (const auto& entry : moveData["moves"]) {
         Move move;
+
         move.id = entry["id"].get<std::string>();
+        
         move.name = entry["name"].get<std::string>();
+        
         move.power = entry["power"].get<int>();
+        
         move.accuracy = entry["accuracy"].get<int>();
+        
         move.priority = entry["priority"].get<int>();
+        
         move.pp = entry["pp"].get<int>();
+        
         move.effect = entry["effect"].get<std::string>();
+        
         move.effectChance = entry["effectChance"].get<int>();
+        
         move.category = stringToMoveCategory(entry["category"].get<std::string>());
+        
         move.type = stringToPokemonType(entry["type"].get<std::string>());
+        
         moves[move.id] = move;
     }
     return moves;

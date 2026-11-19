@@ -14,9 +14,16 @@ class TextBasedBattle {
             SECOND_POKEMON
         };
 
+
         TurnOrder determineTurnOrder(const Pokemon& p1, const Pokemon& p2, Move& m1, Move& m2);
 
         int calculateDamage(const Pokemon& attacker, const Pokemon& defender, const Move& move);
+
+        double BaseDamage;
+
+        double STAB;
+        double GetSTAB(Pokemon& P, Move& M);
+        int FinalDamage;
     
     public:
         TextBasedBattle(); // generate 2 pokemons

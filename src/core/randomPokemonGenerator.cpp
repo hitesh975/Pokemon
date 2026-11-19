@@ -42,6 +42,7 @@ Pokemon pokemonGenerator::generateRandomPokemon(const vector<const PokemonSpecie
     Pokemon pokemon;
 
     pokemon.speciesID = randomSpecies.id;
+    pokemon.types = randomSpecies.types;
     pokemon.level = level;
     pokemon.experience = 0;
     pokemon.friendship = 50;

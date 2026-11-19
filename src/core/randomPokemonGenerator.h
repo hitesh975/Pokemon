@@ -14,6 +14,7 @@ struct PokemonMove {
 
 struct Pokemon {
     string speciesID;
+    vector<PokemonType> types;
 
     int level;
     int experience;

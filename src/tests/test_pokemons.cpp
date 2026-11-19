@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cassert>
 #include "pokemons.h"
+#include "loadmoves.h"
 #include "loadpokemons.h"
 
 int main() {
@@ -29,6 +30,12 @@ int main() {
     // Test 6: Check learnable moves
     assert(!cindercub.learnableMoves.empty());
     assert(cindercub.learnableMoves[0].moveID == "tackle");
+
+    const auto moves = loadMoves("dataset/moves.JSON");
+    assert(isPhysicalMove(moves.at("tackle")));
+    assert(!isSpecialMove(moves.at("tackle")));
+    assert(isSpecialMove(moves.at("ember")));
+    assert(!isPhysicalMove(moves.at("ember")));
 
     std::cout << "All Pokemon loader tests passed!\n";
 
