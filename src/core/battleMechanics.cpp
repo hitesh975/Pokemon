@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cstdlib>
+#include <stdexcept>
 using namespace std;
 
 
@@ -14,16 +16,16 @@ using namespace std;
         // goodluck _||_ im sleeping 
 
 
-enum class TurnOrder {
-    FIRST_POKEMON,
-    SECOND_POKEMON
-};
-
 TextBasedBattle::TextBasedBattle() {
     pokemonGenerator generator(database);
 
     for (const auto& [id, species] : database.getAllPokemons()) {
+        (void)id;
         PokemonList.push_back(&species);
+    }
+
+    if (PokemonList.empty()) {
+        throw runtime_error("Cannot create a battle without Pokemon");
     }
 
     pokemon1 = generator.generateRandomPokemon(PokemonList);
@@ -32,7 +34,12 @@ TextBasedBattle::TextBasedBattle() {
 
 
 //determine turn order
-TurnOrder determineTurnOrder(const Pokemon& p1, const Pokemon& p2, Move& m1, Move& m2) {
+TurnOrder determineTurnOrder(
+    const Pokemon& p1,
+    const Pokemon& p2,
+    const Move& m1,
+    const Move& m2
+) {
     if (m1.priority > m2.priority) {
         return TurnOrder::FIRST_POKEMON;
     } else if (m1.priority < m2.priority) {
@@ -49,29 +56,75 @@ TurnOrder determineTurnOrder(const Pokemon& p1, const Pokemon& p2, Move& m1, Mov
 }
 
 //get STAB
-double GetSTAB(Pokemon& P, Move& M) {
-    if (std::find(P.types.begin(), P.types.end(), M.type) != P.types.end()) {
+double GetSTAB(const Pokemon& pokemon, const Move& move) {
+    if (std::find(pokemon.types.begin(), pokemon.types.end(), move.type) != pokemon.types.end()) {
         return 1.5;
-    } else return 1;
+    }
+    return 1.0;
+}
+
+double TextBasedBattle::GetSTAB(const Pokemon& pokemon, const Move& move) const {
+    return GetSTAB(pokemon, move);
+}
+
+TurnOrder TextBasedBattle::determineTurnOrder(
+    const Pokemon& p1,
+    const Pokemon& p2,
+    const Move& m1,
+    const Move& m2
+) const {
+    return ::determineTurnOrder(p1, p2, m1, m2);
+}
+
+
+//////////IRONNNNNNNNNNNNNNNNNNNN///////////////////////iron iron iron iron iron iron iron iron iron iron iron iron iron iro nrin riorn irneifen
+namespace {
+    double getTypeMultiplier(PokemonType attackType, PokemonType defenderType) {
+      //add yo logic here, use the parameters
+      //amogus sus homungus batolus imposus sus niggus
+    }
+}
+
+double TextBasedBattle::TypeEffectivenessCalculator(
+    const Move& move,
+    const Pokemon& defender
+) const {
+    double effectiveness = 1.0;
+    for (PokemonType defenderType : defender.types) {
+        effectiveness *= getTypeMultiplier(move.type, defenderType);
+    }
+    return effectiveness;
 }
 
 //calculate damage
-int TextBasedBattle::calculateDamage(const Pokemon& attacker, const Pokemon& defender, const Move& move) {
-
-    //base damage = {[(2L/5 + 2) x power x (A/D)]/50} + 2
-
-    //base damage for normal moves
-    if (isPhysicalMove(move)) {
-        double BaseDamage = ((2.0 * attacker.   level / 5 + 2) * move.power * attacker.calculatedStats.attack / defender.calculatedStats.defense) / 50 + 2;
-    } else {//base damage for special moves
-        double BaseDamage = ((2.0 * attacker.level / 5 + 2) * move.power * attacker.calculatedStats.spAttack / defender.calculatedStats.spDefense) / 50 + 2;
+int TextBasedBattle::calculateDamage(
+    const Pokemon& attacker,
+    const Pokemon& defender,
+    const Move& move
+) const {
+    if (move.power <= 0 || (!isPhysicalMove(move) && !isSpecialMove(move))) {
+        return 0;
     }
 
-    //final damage = base damage x STAB x type effectiveness x critical x random
-    double STAB; //CALCCCCCCCCC
-    int FinalDamage = BaseDamage ; //MORE
+    const int level = max(1, attacker.level);
+    const int attack = isPhysicalMove(move)
+        ? max(1, attacker.calculatedStats.attack)
+        : max(1, attacker.calculatedStats.spAttack);
+    const int defense = isPhysicalMove(move)
+        ? max(1, defender.calculatedStats.defense)
+        : max(1, defender.calculatedStats.spDefense);
 
-    
+    const double baseDamage =
+        ((2.0 * level / 5.0 + 2.0) * move.power * attack / defense) / 50.0 + 2.0;
+
+    //final damage = base x STAB x type x crit (2x or 1x with 1/16 chance) x random (0.85 - 1)
+    const double finalDamage =
+        baseDamage * GetSTAB(attacker, move)
+        * TypeEffectivenessCalculator(move, defender);
+
+    return finalDamage > 0.0
+        ? max(1, static_cast<int>(finalDamage))
+        : 0;
 }
 
 
@@ -99,7 +152,7 @@ void TextBasedBattle::startBattle() {
             continue;
         }
 
-        Move& move1 = const_cast<Move&>(database.getMove(pokemon1.learnedMoves[moveChoice1 - 1].moveID));
+        const Move& move1 = database.getMove(pokemon1.learnedMoves[moveChoice1 - 1].moveID);
 
         //choose move for 2nd pokemon
         cout << "Choose a move for " << pokemon2.speciesID << endl;
@@ -116,7 +169,7 @@ void TextBasedBattle::startBattle() {
             continue;
         }
 
-        Move& move2 = const_cast<Move&>(database.getMove(pokemon2.learnedMoves[moveChoice2 - 1].moveID));
+        const Move& move2 = database.getMove(pokemon2.learnedMoves[moveChoice2 - 1].moveID);
 
         //get turn order
         TurnOrder turnOrder = determineTurnOrder(pokemon1, pokemon2, move1, move2);
@@ -126,7 +179,6 @@ void TextBasedBattle::startBattle() {
         if (turnOrder == TurnOrder::FIRST_POKEMON) {
             cout << pokemon1.speciesID << " used " << move1.name << "!" << endl;
             // Implement move effect on pokemon2
-            // For example, reduce HP based on move power and type effectiveness
             
         } else {
             cout << pokemon2.speciesID << " used " << move2.name << "!" << endl;

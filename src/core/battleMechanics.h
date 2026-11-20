@@ -1,31 +1,39 @@
+#pragma once
+
 #include "../data/gameDataBase.h"
 #include "randomPokemonGenerator.h"
 #include <vector>
 
+enum class TurnOrder {
+    FIRST_POKEMON,
+    SECOND_POKEMON
+};
+
 class TextBasedBattle {
-    private:
-        GameDataBase database;
-        std::vector<const PokemonSpecies*> PokemonList;
-        Pokemon pokemon1;
-        Pokemon pokemon2;
-        
-        enum class TurnOrder {
-            FIRST_POKEMON,
-            SECOND_POKEMON
-        };
+public:
+    TextBasedBattle();
+    void startBattle();
 
+    TurnOrder determineTurnOrder(
+        const Pokemon& p1,
+        const Pokemon& p2,
+        const Move& m1,
+        const Move& m2
+    ) const;
+    int calculateDamage(
+        const Pokemon& attacker,
+        const Pokemon& defender,
+        const Move& move
+    ) const;
+    double GetSTAB(const Pokemon& pokemon, const Move& move) const;
+    double TypeEffectivenessCalculator(
+        const Move& move,
+        const Pokemon& defender
+    ) const;
 
-        TurnOrder determineTurnOrder(const Pokemon& p1, const Pokemon& p2, Move& m1, Move& m2);
-
-        int calculateDamage(const Pokemon& attacker, const Pokemon& defender, const Move& move);
-
-        double BaseDamage;
-
-        double STAB;
-        double GetSTAB(Pokemon& P, Move& M);
-        int FinalDamage;
-    
-    public:
-        TextBasedBattle(); // generate 2 pokemons
-        void startBattle();
+private:
+    GameDataBase database;
+    std::vector<const PokemonSpecies*> PokemonList;
+    Pokemon pokemon1;
+    Pokemon pokemon2;
 };
