@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <stdexcept>
+#include <random>
 using namespace std;
 
 
@@ -55,6 +56,18 @@ TurnOrder determineTurnOrder(
     }
 }
 
+double TextBasedBattle::getCrit() const {
+    static std::mt19937 generator(std::random_device{}());
+    std::uniform_int_distribution<int> distribution(1, 16);
+    return distribution(generator) == 1 ? 2.0 : 1.0;
+}
+
+int TextBasedBattle::GetRandomDamageModifier() const {
+    static std::mt19937 generator(std::random_device{}());
+    std::uniform_int_distribution<int> distribution(85, 100);
+    return distribution(generator);
+}
+
 //get STAB
 double GetSTAB(const Pokemon& pokemon, const Move& move) {
     if (std::find(pokemon.types.begin(), pokemon.types.end(), move.type) != pokemon.types.end()) {
@@ -64,7 +77,7 @@ double GetSTAB(const Pokemon& pokemon, const Move& move) {
 }
 
 double TextBasedBattle::GetSTAB(const Pokemon& pokemon, const Move& move) const {
-    return GetSTAB(pokemon, move);
+    return ::GetSTAB(pokemon, move);
 }
 
 TurnOrder TextBasedBattle::determineTurnOrder(
@@ -78,22 +91,14 @@ TurnOrder TextBasedBattle::determineTurnOrder(
 
 
 //////////IRONNNNNNNNNNNNNNNNNNNN///////////////////////iron iron iron iron iron iron iron iron iron iron iron iron iron iro nrin riorn irneifen
-namespace {
-    double getTypeMultiplier(PokemonType attackType, PokemonType defenderType) {
-      //add yo logic here, use the parameters
-      //amogus sus homungus batolus imposus sus niggus
-    }
-}
-
 double TextBasedBattle::TypeEffectivenessCalculator(
     const Move& move,
     const Pokemon& defender
 ) const {
-    double effectiveness = 1.0;
-    for (PokemonType defenderType : defender.types) {
-        effectiveness *= getTypeMultiplier(move.type, defenderType);
-    }
-    return effectiveness;
+    // Iron's type effectiveness implementation belongs here.
+    (void)move;
+    (void)defender;
+    return 1.0;
 }
 
 //calculate damage
@@ -118,9 +123,12 @@ int TextBasedBattle::calculateDamage(
         ((2.0 * level / 5.0 + 2.0) * move.power * attack / defense) / 50.0 + 2.0;
 
     //final damage = base x STAB x type x crit (2x or 1x with 1/16 chance) x random (0.85 - 1)
+
     const double finalDamage =
         baseDamage * GetSTAB(attacker, move)
-        * TypeEffectivenessCalculator(move, defender);
+        * TypeEffectivenessCalculator(move, defender)
+        * getCrit()
+        * GetRandomDamageModifier() / 100.0;
 
     return finalDamage > 0.0
         ? max(1, static_cast<int>(finalDamage))

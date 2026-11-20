@@ -20,16 +20,22 @@ public:
         const Move& m1,
         const Move& m2
     ) const;
+
     int calculateDamage(
         const Pokemon& attacker,
         const Pokemon& defender,
         const Move& move
     ) const;
+
     double GetSTAB(const Pokemon& pokemon, const Move& move) const;
+
     double TypeEffectivenessCalculator(
         const Move& move,
         const Pokemon& defender
     ) const;
+
+    double getCrit() const;
+    int GetRandomDamageModifier() const;
 
 private:
     GameDataBase database;
