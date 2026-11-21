@@ -41,7 +41,11 @@ int main() {
     assert(hasCategory(moves.at("ember"), MoveCategory::SPECIAL));
     assert(hasCategory(moves.at("ember"), MoveCategory::STATUS));
     assert(hasCategory(moves.at("psychic"), MoveCategory::SPECIAL));
-    assert(hasCategory(moves.at("psychic"), MoveCategory::STAT_CHANGE));
+    assert(moves.at("psychic").effect == MoveEffect::LOWER_SP_DEFENSE);
+    assert(moves.at("confusion").volatileStatus == VolatileStatus::CONFUSION);
+    assert(moves.at("confuse_ray").volatileStatusChance == 100);
+    assert(stringToVolatileStatus("DROWSY") == VolatileStatus::DROWSY);
+    assert(moves.at("tackle").heal == 0);
 
     std::cout << "All Pokemon loader tests passed!\n";
 

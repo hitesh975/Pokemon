@@ -51,9 +51,15 @@ std::unordered_map<std::string, Move> loadMoves(const std::string& filePath) {
         
         move.pp = entry["pp"].get<int>();
         
-        move.effect = entry["effect"].get<std::string>();
+        move.heal = entry["heal"].get<int>();
+
+        move.effect = stringToMoveEffect(entry["effect"].get<std::string>());
         
         move.effectChance = entry["effectChance"].get<int>();
+
+        move.volatileStatus = stringToVolatileStatus(entry["volatileStatus"].get<std::string>());
+
+        move.volatileStatusChance = entry["volatileStatusChance"].get<int>();
         
         if (!entry["categories"].is_array()) {
             throw std::invalid_argument("Move categories must be an array: " + move.id);

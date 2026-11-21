@@ -8,8 +8,23 @@ enum class MoveCategory {
     PHYSICAL,
     SPECIAL,
     STATUS,
-    HEAL,
-    STAT_CHANGE
+    HEAL
+};
+
+enum class MoveEffect {
+    NONE,
+    BURN,
+    LOWER_ATTACK,
+    HIGH_CRITICAL,
+    LOWER_SP_DEFENSE,
+    LOWER_SPEED,
+    PARALYZE
+};
+
+enum class VolatileStatus {
+    NONE,
+    CONFUSION,
+    DROWSY
 };
 
 // Pokemon types
@@ -43,11 +58,29 @@ inline MoveCategory stringToMoveCategory(const std::string& categoryStr) {
         return MoveCategory::STATUS;
     } else if (categoryStr == "HEAL") {
         return MoveCategory::HEAL;
-    } else if (categoryStr == "STAT_CHANGE") {
-        return MoveCategory::STAT_CHANGE;
     }
 
     throw std::invalid_argument("Invalid move category: " + categoryStr);
+}
+
+inline MoveEffect stringToMoveEffect(const std::string& effectStr) {
+    if (effectStr == "NONE") return MoveEffect::NONE;
+    else if (effectStr == "BURN") return MoveEffect::BURN;
+    else if (effectStr == "LOWER_ATTACK") return MoveEffect::LOWER_ATTACK;
+    else if (effectStr == "HIGH_CRITICAL") return MoveEffect::HIGH_CRITICAL;
+    else if (effectStr == "LOWER_SP_DEFENSE") return MoveEffect::LOWER_SP_DEFENSE;
+    else if (effectStr == "LOWER_SPEED") return MoveEffect::LOWER_SPEED;
+    else if (effectStr == "PARALYZE") return MoveEffect::PARALYZE;
+
+    throw std::invalid_argument("Invalid move effect: " + effectStr);
+}
+
+inline VolatileStatus stringToVolatileStatus(const std::string& statusStr) {
+    if (statusStr == "NONE") return VolatileStatus::NONE;
+    else if (statusStr == "CONFUSION") return VolatileStatus::CONFUSION;
+    else if (statusStr == "DROWSY") return VolatileStatus::DROWSY;
+
+    throw std::invalid_argument("Invalid volatile status: " + statusStr);
 }
 
 inline PokemonType stringToPokemonType(const std::string& typeStr) {
@@ -91,8 +124,11 @@ struct Move {
     int priority;
     int pp;
 
-    std::string effect;
+    int heal;
+    MoveEffect effect;
     int effectChance;
+    VolatileStatus volatileStatus;
+    int volatileStatusChance;
 };
 
 

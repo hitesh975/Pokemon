@@ -181,9 +181,6 @@ int TextBasedBattle::MoveResolver(
     if (hasCategory(move, MoveCategory::HEAL)) {
 
     }
-    if (hasCategory(move, MoveCategory::STAT_CHANGE)) {
-
-    }
     if (hasCategory(move, MoveCategory::STATUS)) {
 
     }
