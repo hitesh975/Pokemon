@@ -55,7 +55,15 @@ std::unordered_map<std::string, Move> loadMoves(const std::string& filePath) {
         
         move.effectChance = entry["effectChance"].get<int>();
         
-        move.category = stringToMoveCategory(entry["category"].get<std::string>());
+        if (!entry["categories"].is_array()) {
+            throw std::invalid_argument("Move categories must be an array: " + move.id);
+        }
+        for (const auto& category : entry["categories"]) {
+            move.categories.push_back(stringToMoveCategory(category.get<std::string>()));
+        }
+        if (move.categories.empty()) {
+            throw std::invalid_argument("Move must have at least one category: " + move.id);
+        }
         
         move.type = stringToPokemonType(entry["type"].get<std::string>());
         

@@ -3,7 +3,7 @@
     {
       "id": "tackle",
       "name": "Tackle",
-      "category": "PHYSICAL",
+      "categories": ["PHYSICAL"],
       "type": "NORMAL",
       "power": 40,
       "accuracy": 100,
@@ -15,7 +15,7 @@
     {
       "id": "growl",
       "name": "Growl",
-      "category": "STATUS",
+      "categories": ["STATUS", "STAT_CHANGE"],
       "type": "NORMAL",
       "power": 0,
       "accuracy": 100,
@@ -27,7 +27,7 @@
     {
       "id": "scratch",
       "name": "Scratch",
-      "category": "PHYSICAL",
+      "categories": ["PHYSICAL"],
       "type": "NORMAL",
       "power": 40,
       "accuracy": 100,
@@ -39,7 +39,7 @@
     {
       "id": "ember",
       "name": "Ember",
-      "category": "SPECIAL",
+      "categories": ["SPECIAL", "STATUS"],
       "type": "FIRE",
       "power": 40,
       "accuracy": 100,
@@ -51,7 +51,7 @@
     {
       "id": "fire_fang",
       "name": "Fire Fang",
-      "category": "PHYSICAL",
+      "categories": ["PHYSICAL", "STATUS"],
       "type": "FIRE",
       "power": 65,
       "accuracy": 95,
@@ -63,7 +63,7 @@
     {
       "id": "flamethrower",
       "name": "Flamethrower",
-      "category": "SPECIAL",
+      "categories": ["SPECIAL", "STATUS"],
       "type": "FIRE",
       "power": 90,
       "accuracy": 100,
@@ -75,7 +75,7 @@
     {
       "id": "vine_whip",
       "name": "Vine Whip",
-      "category": "PHYSICAL",
+      "categories": ["PHYSICAL"],
       "type": "GRASS",
       "power": 45,
       "accuracy": 100,
@@ -87,7 +87,7 @@
     {
       "id": "razor_leaf",
       "name": "Razor Leaf",
-      "category": "PHYSICAL",
+      "categories": ["PHYSICAL"],
       "type": "GRASS",
       "power": 55,
       "accuracy": 95,
@@ -99,7 +99,7 @@
     {
       "id": "psychic",
       "name": "Psychic",
-      "category": "SPECIAL",
+      "categories": ["SPECIAL", "STAT_CHANGE"],
       "type": "PSYCHIC",
       "power": 90,
       "accuracy": 100,
@@ -111,7 +111,7 @@
     {
       "id": "confusion",
       "name": "Confusion",
-      "category": "SPECIAL",
+      "categories": ["SPECIAL", "STATUS"],
       "type": "PSYCHIC",
       "power": 50,
       "accuracy": 100,
@@ -123,7 +123,7 @@
     {
       "id": "water_gun",
       "name": "Water Gun",
-      "category": "SPECIAL",
+      "categories": ["SPECIAL"],
       "type": "WATER",
       "power": 40,
       "accuracy": 100,
@@ -135,7 +135,7 @@
     {
       "id": "bubble_beam",
       "name": "Bubble Beam",
-      "category": "SPECIAL",
+      "categories": ["SPECIAL", "STAT_CHANGE"],
       "type": "WATER",
       "power": 65,
       "accuracy": 100,
@@ -147,7 +147,7 @@
     {
       "id": "shadow_ball",
       "name": "Shadow Ball",
-      "category": "SPECIAL",
+      "categories": ["SPECIAL", "STAT_CHANGE"],
       "type": "GHOST",
       "power": 80,
       "accuracy": 100,
@@ -159,7 +159,7 @@
     {
       "id": "lick",
       "name": "Lick",
-      "category": "PHYSICAL",
+      "categories": ["PHYSICAL", "STATUS"],
       "type": "GHOST",
       "power": 30,
       "accuracy": 100,
@@ -171,7 +171,7 @@
     {
       "id": "confuse_ray",
       "name": "Confuse Ray",
-      "category": "STATUS",
+      "categories": ["STATUS"],
       "type": "GHOST",
       "power": 0,
       "accuracy": 100,

@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <algorithm>
 #include "pokemons.h"
 #include "loadmoves.h"
 #include "loadpokemons.h"
@@ -32,10 +33,15 @@ int main() {
     assert(cindercub.learnableMoves[0].moveID == "tackle");
 
     const auto moves = loadMoves("dataset/moves.JSON");
-    assert(moves.at("tackle").category == MoveCategory::PHYSICAL);
-    assert(moves.at("tackle").category != MoveCategory::SPECIAL);
-    assert(moves.at("ember").category == MoveCategory::SPECIAL);
-    assert(moves.at("ember").category != MoveCategory::PHYSICAL);
+    const auto hasCategory = [](const Move& move, MoveCategory category) {
+        return std::find(move.categories.begin(), move.categories.end(), category) != move.categories.end();
+    };
+    assert(hasCategory(moves.at("tackle"), MoveCategory::PHYSICAL));
+    assert(!hasCategory(moves.at("tackle"), MoveCategory::SPECIAL));
+    assert(hasCategory(moves.at("ember"), MoveCategory::SPECIAL));
+    assert(hasCategory(moves.at("ember"), MoveCategory::STATUS));
+    assert(hasCategory(moves.at("psychic"), MoveCategory::SPECIAL));
+    assert(hasCategory(moves.at("psychic"), MoveCategory::STAT_CHANGE));
 
     std::cout << "All Pokemon loader tests passed!\n";
 

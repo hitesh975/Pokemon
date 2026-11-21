@@ -9,6 +9,11 @@
 #include "moves.h"
 using namespace std;
 
+namespace {
+bool hasCategory(const Move& move, MoveCategory category) {
+    return std::find(move.categories.begin(), move.categories.end(), category) != move.categories.end();
+}
+}
 
 ///////////////////   NOTE   /////////////////////
 
@@ -109,7 +114,7 @@ int TextBasedBattle::calculatePhysicalDamage(
     const Pokemon& defender,
     const Move& move
 ) const {
-    if (move.category != MoveCategory::PHYSICAL || move.power <= 0) {
+    if (!hasCategory(move, MoveCategory::PHYSICAL) || move.power <= 0) {
         return 0;
     }
 
@@ -137,7 +142,7 @@ int TextBasedBattle::calculateSpecialDamage(
     const Pokemon& defender,
     const Move& move
 ) const {
-    if (move.category != MoveCategory::SPECIAL || move.power <= 0) {
+    if (!hasCategory(move, MoveCategory::SPECIAL) || move.power <= 0) {
         return 0;
     }
 
@@ -167,10 +172,20 @@ int TextBasedBattle::MoveResolver(
 ) const {
     int damage = 0;
 
-    if (move.category == MoveCategory::PHYSICAL) {
+    if (hasCategory(move, MoveCategory::PHYSICAL)) {
         damage = calculatePhysicalDamage(attacker, defender, move);
-    } else if (move.category == MoveCategory::SPECIAL) {
+    }
+    if (hasCategory(move, MoveCategory::SPECIAL)) {
         damage = calculateSpecialDamage(attacker, defender, move);
+    }
+    if (hasCategory(move, MoveCategory::HEAL)) {
+
+    }
+    if (hasCategory(move, MoveCategory::STAT_CHANGE)) {
+
+    }
+    if (hasCategory(move, MoveCategory::STATUS)) {
+
     }
 
     (void)defender;

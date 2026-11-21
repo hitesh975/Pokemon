@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 enum class MoveCategory {
     PHYSICAL,
@@ -82,7 +83,7 @@ struct LearnableMove {
 struct Move {
     std::string id;
     std::string name;
-    MoveCategory category;
+    std::vector<MoveCategory> categories;
     PokemonType type;
 
     int power;
