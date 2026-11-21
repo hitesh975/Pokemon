@@ -32,10 +32,10 @@ int main() {
     assert(cindercub.learnableMoves[0].moveID == "tackle");
 
     const auto moves = loadMoves("dataset/moves.JSON");
-    assert(isPhysicalMove(moves.at("tackle")));
-    assert(!isSpecialMove(moves.at("tackle")));
-    assert(isSpecialMove(moves.at("ember")));
-    assert(!isPhysicalMove(moves.at("ember")));
+    assert(moves.at("tackle").category == MoveCategory::PHYSICAL);
+    assert(moves.at("tackle").category != MoveCategory::SPECIAL);
+    assert(moves.at("ember").category == MoveCategory::SPECIAL);
+    assert(moves.at("ember").category != MoveCategory::PHYSICAL);
 
     std::cout << "All Pokemon loader tests passed!\n";
 

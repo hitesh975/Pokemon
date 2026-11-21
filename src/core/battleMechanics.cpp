@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <random>
+#include "moves.h"
 using namespace std;
 
 
@@ -101,28 +102,22 @@ double TextBasedBattle::TypeEffectivenessCalculator(
     return 1.0;
 }
 
-//calculate damage
-int TextBasedBattle::calculateDamage(
+//calculate physical damage
+int TextBasedBattle::calculatePhysicalDamage(
     const Pokemon& attacker,
     const Pokemon& defender,
     const Move& move
 ) const {
-    if (move.power <= 0 || (!isPhysicalMove(move) && !isSpecialMove(move))) {
+    if (move.category != MoveCategory::PHYSICAL || move.power <= 0) {
         return 0;
     }
 
     const int level = max(1, attacker.level);
-    const int attack = isPhysicalMove(move)
-        ? max(1, attacker.calculatedStats.attack)
-        : max(1, attacker.calculatedStats.spAttack);
-    const int defense = isPhysicalMove(move)
-        ? max(1, defender.calculatedStats.defense)
-        : max(1, defender.calculatedStats.spDefense);
+    const int attack = max(1, attacker.calculatedStats.attack);
+    const int defense = max(1, defender.calculatedStats.defense);
 
     const double baseDamage =
         ((2.0 * level / 5.0 + 2.0) * move.power * attack / defense) / 50.0 + 2.0;
-
-    //final damage = base x STAB x type x crit (2x or 1x with 1/16 chance) x random (0.85 - 1)
 
     const double finalDamage =
         baseDamage * GetSTAB(attacker, move)
@@ -135,6 +130,51 @@ int TextBasedBattle::calculateDamage(
         : 0;
 }
 
+//calculate special damage
+int TextBasedBattle::calculateSpecialDamage(
+    const Pokemon& attacker,
+    const Pokemon& defender,
+    const Move& move
+) const {
+    if (move.category != MoveCategory::SPECIAL || move.power <= 0) {
+        return 0;
+    }
+
+    const int level = max(1, attacker.level);
+    const int attack = max(1, attacker.calculatedStats.spAttack);
+    const int defense = max(1, defender.calculatedStats.spDefense);
+
+    const double baseDamage =
+        ((2.0 * level / 5.0 + 2.0) * move.power * attack / defense) / 50.0 + 2.0;
+
+    const double finalDamage =
+        baseDamage * GetSTAB(attacker, move)
+        * TypeEffectivenessCalculator(move, defender)
+        * getCrit()
+        * GetRandomDamageModifier() / 100.0;
+
+    return finalDamage > 0.0
+        ? max(1, static_cast<int>(finalDamage))
+        : 0;
+}
+
+
+int TextBasedBattle::MoveResolver(
+    const Pokemon& attacker,
+    Pokemon& defender,
+    const Move& move
+) const {
+    int damage = 0;
+
+    if (move.category == MoveCategory::PHYSICAL) {
+        damage = calculatePhysicalDamage(attacker, defender, move);
+    } else if (move.category == MoveCategory::SPECIAL) {
+        damage = calculateSpecialDamage(attacker, defender, move);
+    }
+
+    (void)defender;
+    return damage;
+}
 
 //game loop
 void TextBasedBattle::startBattle() {
@@ -186,11 +226,12 @@ void TextBasedBattle::startBattle() {
 
         if (turnOrder == TurnOrder::FIRST_POKEMON) {
             cout << pokemon1.speciesID << " used " << move1.name << "!" << endl;
-            // Implement move effect on pokemon2
-            
+            const int damage = MoveResolver(pokemon1, pokemon2, move1);
+            cout << damage << " damage dealt!" << endl;
         } else {
             cout << pokemon2.speciesID << " used " << move2.name << "!" << endl;
-            // Implement move effect on pokemon1
+            const int damage = MoveResolver(pokemon2, pokemon1, move2);
+            cout << damage << " damage dealt!" << endl;
         }
     }
 }

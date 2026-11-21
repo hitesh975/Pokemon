@@ -54,6 +54,5 @@ class pokemonGenerator {
 
         Stats calculateStats(const Stats& baseStats, const Stats& ivs, const Stats& evs, int level, Nature nature);
 
-    
 };
 

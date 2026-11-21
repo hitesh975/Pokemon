@@ -6,7 +6,6 @@
 enum class MoveCategory {
     PHYSICAL,
     SPECIAL,
-    DAMAGE,
     STATUS,
     HEAL,
     STAT_CHANGE
@@ -39,8 +38,6 @@ inline MoveCategory stringToMoveCategory(const std::string& categoryStr) {
         return MoveCategory::PHYSICAL;
     } else if (categoryStr == "SPECIAL") {
         return MoveCategory::SPECIAL;
-    } else if (categoryStr == "DAMAGE") {
-        return MoveCategory::DAMAGE;
     } else if (categoryStr == "STATUS") {
         return MoveCategory::STATUS;
     } else if (categoryStr == "HEAL") {
@@ -97,11 +94,4 @@ struct Move {
     int effectChance;
 };
 
-inline bool isPhysicalMove(const Move& move) {
-    return move.category == MoveCategory::PHYSICAL;
-}
-
-inline bool isSpecialMove(const Move& move) {
-    return move.category == MoveCategory::SPECIAL;
-}
 

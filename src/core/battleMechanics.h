@@ -21,9 +21,21 @@ public:
         const Move& m2
     ) const;
 
-    int calculateDamage(
+    int calculatePhysicalDamage(
         const Pokemon& attacker,
         const Pokemon& defender,
+        const Move& move
+    ) const;
+
+    int calculateSpecialDamage(
+        const Pokemon& attacker,
+        const Pokemon& defender,
+        const Move& move
+    ) const;
+
+    int MoveResolver(
+        const Pokemon& attacker,
+        Pokemon& defender,
         const Move& move
     ) const;
 
