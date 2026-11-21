@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <random>
+#include <limits>
 #include "moves.h"
 using namespace std;
 
@@ -193,12 +194,18 @@ void TextBasedBattle::startBattle() {
         }
 
         int moveChoice1;
-        cin >> moveChoice1;
+        do {
+            moveChoice1 = 0;
+            cin >> moveChoice1;
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
 
-        if (moveChoice1 < 1 || moveChoice1 > static_cast<int>(pokemon1.learnedMoves.size())) {
-            cout << "Invalid move choice. Turn skipped." << endl;
-            continue;
-        }
+            if (moveChoice1 < 1 || moveChoice1 > static_cast<int>(pokemon1.learnedMoves.size())) {
+                cout << "Invalid move choice. Choose a valid move:" << endl;
+            }
+        } while (moveChoice1 < 1 || moveChoice1 > static_cast<int>(pokemon1.learnedMoves.size()));
 
         const Move& move1 = database.getMove(pokemon1.learnedMoves[moveChoice1 - 1].moveID);
 
@@ -210,12 +217,18 @@ void TextBasedBattle::startBattle() {
         }
 
         int moveChoice2;
-        cin >> moveChoice2;
+        do {
+            moveChoice2 = 0;
+            cin >> moveChoice2;
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
 
-        if (moveChoice2 < 1 || moveChoice2 > static_cast<int>(pokemon2.learnedMoves.size())) {
-            cout << "Invalid move choice. Turn skipped." << endl;
-            continue;
-        }
+            if (moveChoice2 < 1 || moveChoice2 > static_cast<int>(pokemon2.learnedMoves.size())) {
+                cout << "Invalid move choice. Choose a valid move:" << endl;
+            }
+        } while (moveChoice2 < 1 || moveChoice2 > static_cast<int>(pokemon2.learnedMoves.size()));
 
         const Move& move2 = database.getMove(pokemon2.learnedMoves[moveChoice2 - 1].moveID);
 
@@ -227,10 +240,14 @@ void TextBasedBattle::startBattle() {
         if (turnOrder == TurnOrder::FIRST_POKEMON) {
             cout << pokemon1.speciesID << " used " << move1.name << "!" << endl;
             const int damage = MoveResolver(pokemon1, pokemon2, move1);
+
+            //ONLY PRINTS THE DAMAGE FOR NOWWWWWWWWWWW
             cout << damage << " damage dealt!" << endl;
         } else {
             cout << pokemon2.speciesID << " used " << move2.name << "!" << endl;
             const int damage = MoveResolver(pokemon2, pokemon1, move2);
+
+            //ONLY PRINTS THE DAMAGE FOR NOWWWWWWWWW
             cout << damage << " damage dealt!" << endl;
         }
     }
