@@ -27,6 +27,9 @@ struct Pokemon {
     Stats calculatedStats;
     int currentHP;
 
+    MoveEffect Status;
+    VolatileStatus VolatileStatus;
+
     vector<PokemonMove> learnedMoves;
 };
 

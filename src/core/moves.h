@@ -14,17 +14,70 @@ enum class MoveCategory {
 enum class MoveEffect {
     NONE,
     BURN,
-    LOWER_ATTACK,
-    HIGH_CRITICAL,
-    LOWER_SP_DEFENSE,
-    LOWER_SPEED,
-    PARALYZE
+    PARALYZE,
+    SLEEP,
+    FREEZE,
+    POISON
 };
 
 enum class VolatileStatus {
+    //enemy pokemons
     NONE,
     CONFUSION,
-    DROWSY
+    DROWSY,
+    BIND, //4-5 turns
+    CANT_ESCAPE,
+    CURSED,
+    EMBARGO, //cannot use held item for 5 turns
+    ENCORE,
+    FLINCH,
+    FUTURE_ATTACK,
+    IDENTIFIED,
+    LEECH_SEED, //skull emoji
+    LOCKED_ON,
+    MOVE_DISABLED,
+    NIGHTMARE,
+    TAUNTED,
+
+    //opposite side
+    SPIKES,
+    STEALTH_ROCK,
+    TOXIC_SPIKES,
+    STICKY_WEBS,
+
+    //user
+    CHARGING,
+    CRITICAL_HIT_RATIO_BOOST,
+    DESTINY_BOUND,
+    ELECTRIC_BOOST,
+    FLASH_FIRE,
+    INGRAINED, //skul emoji
+    LASER_FOCUS,
+    MINIMIZED,
+    RAMPAGING,
+    RECHARGING,
+    SEALING_OFF,
+    SKY_HIGH,
+    STOCKPILING,
+    SUBMERGED,
+    UNDERGROUND,
+    UPROAR,
+
+    //user side
+    LIGHT_SCREEN,
+    AURORA_VIEL,
+    REFLECT,
+    SAFEGUARD,
+    TAILWIND,
+
+    //all pokemon
+    FAIRY_LOCKED,
+    JAW_LOCK,
+    TRICK_ROOM,
+    WONDER_ROOM,
+
+    //status that dont change til withdrawn
+
 };
 
 // Pokemon types
@@ -66,11 +119,10 @@ inline MoveCategory stringToMoveCategory(const std::string& categoryStr) {
 inline MoveEffect stringToMoveEffect(const std::string& effectStr) {
     if (effectStr == "NONE") return MoveEffect::NONE;
     else if (effectStr == "BURN") return MoveEffect::BURN;
-    else if (effectStr == "LOWER_ATTACK") return MoveEffect::LOWER_ATTACK;
-    else if (effectStr == "HIGH_CRITICAL") return MoveEffect::HIGH_CRITICAL;
-    else if (effectStr == "LOWER_SP_DEFENSE") return MoveEffect::LOWER_SP_DEFENSE;
-    else if (effectStr == "LOWER_SPEED") return MoveEffect::LOWER_SPEED;
     else if (effectStr == "PARALYZE") return MoveEffect::PARALYZE;
+    else if (effectStr == "SLEEP") return MoveEffect::SLEEP;
+    else if (effectStr == "POISON") return MoveEffect::POISON;
+    else if (effectStr == "FREEZE") return MoveEffect::FREEZE;
 
     throw std::invalid_argument("Invalid move effect: " + effectStr);
 }
