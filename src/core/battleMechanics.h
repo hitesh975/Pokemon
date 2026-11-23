@@ -34,7 +34,7 @@ public:
     ) const;
 
     int MoveResolver(
-        const Pokemon& attacker,
+        Pokemon& attacker,
         Pokemon& defender,
         const Move& move
     ) const;

@@ -166,7 +166,7 @@ int TextBasedBattle::calculateSpecialDamage(
 
 
 int TextBasedBattle::MoveResolver(
-    const Pokemon& attacker,
+    Pokemon& attacker,
     Pokemon& defender,
     const Move& move
 ) const {
@@ -174,15 +174,18 @@ int TextBasedBattle::MoveResolver(
 
     if (hasCategory(move, MoveCategory::PHYSICAL)) {
         damage = calculatePhysicalDamage(attacker, defender, move);
+        defender.currentHP = max(0, defender.currentHP - damage);
     }
     if (hasCategory(move, MoveCategory::SPECIAL)) {
         damage = calculateSpecialDamage(attacker, defender, move);
+        defender.currentHP = max(0, defender.currentHP - damage);
     }
     if (hasCategory(move, MoveCategory::HEAL)) {
-
+        attacker.currentHP += move.heal;
+        attacker.currentHP = min(attacker.calculatedStats.hp, attacker.currentHP);
     }
     if (hasCategory(move, MoveCategory::STATUS)) {
-
+        
     }
 
     (void)defender;
@@ -253,13 +256,11 @@ void TextBasedBattle::startBattle() {
             cout << pokemon1.speciesID << " used " << move1.name << "!" << endl;
             const int damage = MoveResolver(pokemon1, pokemon2, move1);
 
-            //ONLY PRINTS THE DAMAGE FOR NOWWWWWWWWWWW
             cout << damage << " damage dealt!" << endl;
         } else {
             cout << pokemon2.speciesID << " used " << move2.name << "!" << endl;
             const int damage = MoveResolver(pokemon2, pokemon1, move2);
 
-            //ONLY PRINTS THE DAMAGE FOR NOWWWWWWWWW
             cout << damage << " damage dealt!" << endl;
         }
     }
