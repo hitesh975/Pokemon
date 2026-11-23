@@ -41,6 +41,9 @@ TextBasedBattle::TextBasedBattle() {
 }
 
 
+
+
+
 //determine turn order
 TurnOrder determineTurnOrder(
     const Pokemon& p1,
@@ -61,7 +64,12 @@ TurnOrder determineTurnOrder(
               return (rand() % 2 == 0) ? TurnOrder::FIRST_POKEMON : TurnOrder::SECOND_POKEMON;
               }
     }
-}
+  }
+
+
+
+
+
 
 double TextBasedBattle::getCrit() const {
     static std::mt19937 generator(std::random_device{}());
@@ -69,11 +77,18 @@ double TextBasedBattle::getCrit() const {
     return distribution(generator) == 1 ? 2.0 : 1.0;
 }
 
+
+
+
+
 int TextBasedBattle::GetRandomDamageModifier() const {
     static std::mt19937 generator(std::random_device{}());
     std::uniform_int_distribution<int> distribution(85, 100);
     return distribution(generator);
 }
+
+
+
 
 //get STAB
 double GetSTAB(const Pokemon& pokemon, const Move& move) {
@@ -83,9 +98,17 @@ double GetSTAB(const Pokemon& pokemon, const Move& move) {
     return 1.0;
 }
 
+
+
+
 double TextBasedBattle::GetSTAB(const Pokemon& pokemon, const Move& move) const {
     return ::GetSTAB(pokemon, move);
 }
+
+
+
+
+
 
 TurnOrder TextBasedBattle::determineTurnOrder(
     const Pokemon& p1,
@@ -95,6 +118,10 @@ TurnOrder TextBasedBattle::determineTurnOrder(
 ) const {
     return ::determineTurnOrder(p1, p2, m1, m2);
 }
+
+
+
+
 
 
 //////////IRONNNNNNNNNNNNNNNNNNNN///////////////////////iron iron iron iron iron iron iron iron iron iron iron iron iron iro nrin riorn irneifen
@@ -107,6 +134,14 @@ double TextBasedBattle::TypeEffectivenessCalculator(
     (void)defender;
     return 1.0;
 }
+
+
+
+
+
+
+
+
 
 //calculate physical damage
 int TextBasedBattle::calculatePhysicalDamage(
@@ -135,6 +170,13 @@ int TextBasedBattle::calculatePhysicalDamage(
         ? max(1, static_cast<int>(finalDamage))
         : 0;
 }
+
+
+
+
+
+
+
 
 //calculate special damage
 int TextBasedBattle::calculateSpecialDamage(
@@ -165,6 +207,12 @@ int TextBasedBattle::calculateSpecialDamage(
 }
 
 
+
+
+
+
+
+
 int TextBasedBattle::MoveResolver(
     Pokemon& attacker,
     Pokemon& defender,
@@ -191,6 +239,12 @@ int TextBasedBattle::MoveResolver(
     (void)defender;
     return damage;
 }
+
+
+
+
+
+
 
 //game loop
 void TextBasedBattle::startBattle() {
@@ -250,18 +304,53 @@ void TextBasedBattle::startBattle() {
         //get turn order
         TurnOrder turnOrder = determineTurnOrder(pokemon1, pokemon2, move1, move2);
 
-        //execute the move
-
+        // Execute the moves in turn order and stop if a Pokemon faints.
         if (turnOrder == TurnOrder::FIRST_POKEMON) {
             cout << pokemon1.speciesID << " used " << move1.name << "!" << endl;
             const int damage = MoveResolver(pokemon1, pokemon2, move1);
-
             cout << damage << " damage dealt!" << endl;
+
+            if (pokemon2.currentHP <= 0) {
+                cout << pokemon2.speciesID << " fainted!" << endl;
+                break;
+            }
+
+            cout << pokemon2.speciesID << " used " << move2.name << "!" << endl;
+            const int secondDamage = MoveResolver(pokemon2, pokemon1, move2);
+            cout << secondDamage << " damage dealt!" << endl;
+
+            if (pokemon1.currentHP <= 0) {
+                cout << pokemon1.speciesID << " fainted!" << endl;
+                break;
+            }
         } else {
             cout << pokemon2.speciesID << " used " << move2.name << "!" << endl;
             const int damage = MoveResolver(pokemon2, pokemon1, move2);
-
             cout << damage << " damage dealt!" << endl;
+
+            if (pokemon1.currentHP <= 0) {
+                cout << pokemon1.speciesID << " fainted!" << endl;
+                break;
+            }
+
+            cout << pokemon1.speciesID << " used " << move1.name << "!" << endl;
+            const int secondDamage = MoveResolver(pokemon1, pokemon2, move1);
+            cout << secondDamage << " damage dealt!" << endl;
+
+            if (pokemon2.currentHP <= 0) {
+                cout << pokemon2.speciesID << " fainted!" << endl;
+                break;
+            }
         }
+    }
+
+    if (pokemon1.currentHP <= 0 && pokemon2.currentHP <= 0) {
+        cout << "The battle ended in a draw!" << endl;
+    } else if (pokemon1.currentHP <= 0) {
+        cout << pokemon2.speciesID << " wins the battle!" << endl;
+        cout << "Battle ended!" << endl;
+    } else if (pokemon2.currentHP <= 0) {
+        cout << pokemon1.speciesID << " wins the battle!" << endl;
+        cout << "Battle ended!" << endl;
     }
 }
