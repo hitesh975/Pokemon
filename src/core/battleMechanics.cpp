@@ -15,6 +15,8 @@ bool hasCategory(const Move& move, MoveCategory category) {
 }
 }
 
+static std::mt19937 generator(std::random_device{}());
+
 ///////////////////   NOTE   /////////////////////
 
     //NEED TO ADD:
@@ -72,7 +74,6 @@ TurnOrder determineTurnOrder(
 
 
 double TextBasedBattle::getCrit() const {
-    static std::mt19937 generator(std::random_device{}());
     std::uniform_int_distribution<int> distribution(1, 16);
     return distribution(generator) == 1 ? 2.0 : 1.0;
 }
@@ -82,7 +83,6 @@ double TextBasedBattle::getCrit() const {
 
 
 int TextBasedBattle::GetRandomDamageModifier() const {
-    static std::mt19937 generator(std::random_device{}());
     std::uniform_int_distribution<int> distribution(85, 100);
     return distribution(generator);
 }
@@ -244,104 +244,216 @@ int TextBasedBattle::MoveResolver(
 
 
 
+//status effects
+    void TextBasedBattle::HandleStatusEffects(
+    const Move& move,
+    Pokemon& pokemon,
+    bool which //which pokemon
+    ) {
+        (void)which;
+
+    //none
+    if (move.effect == MoveEffect::NONE) {
+        pokemon.Status = MoveEffect::NONE;
+
+
+    } else if (move.effect == MoveEffect::BURN) {         //BURN
+        pokemon.Status = MoveEffect::BURN;
+        //halve the pokemons atack outside of this function probably in damage calculator formula
+        pokemon.currentHP -= pokemon.calculatedStats.hp / 16;
+        StatusMessage = pokemon.speciesID + " is hurt by its burn";
+
+
+    } else if (move.effect == MoveEffect::FREEZE) {       //FREEZE
+        pokemon.Status = MoveEffect::FREEZE;
+        StatusMessage = pokemon.speciesID + " is frozen solid";
+
+
+    } else if (move.effect == MoveEffect::PARALYZE) {     //PARALYZE
+        pokemon.Status = MoveEffect::PARALYZE;
+        StatusMessage = pokemon.speciesID + " is paralysed";
+
+
+    } else if (move.effect == MoveEffect::POISON) {       //POSION
+        StatusMessage = pokemon.speciesID + " is poisoned";
+        pokemon.Status = MoveEffect::POISON;
+        pokemon.currentHP -= pokemon.calculatedStats.hp / 16;
+
+    } else if (move.effect == MoveEffect::SLEEP) {        //SLEP
+        pokemon.Status = MoveEffect::SLEEP;
+        StatusMessage = pokemon.speciesID + " is fast asleep";
+    }
+
+}
+
+
+
 
 
 //game loop
 void TextBasedBattle::startBattle() {
-
-
     cout << "Battle started between " << pokemon1.speciesID << " and " << pokemon2.speciesID << "!" << endl;
-    // Implement battle logic here
+    bool noMovesRemaining = false;
 
     while (pokemon1.currentHP > 0 && pokemon2.currentHP > 0) {
+        Pokemon1CanAttack = true;
+        Pokemon2CanAttack = true;
 
-        //choose move for 1st pokemon
-        cout << "Choose a move for " << pokemon1.speciesID << endl;
-        for (size_t i = 0; i < pokemon1.learnedMoves.size(); ++i) {
-            const Move& move = database.getMove(pokemon1.learnedMoves[i].moveID);
-            cout << i + 1 << ". " << move.name << " (PP: " << pokemon1.learnedMoves[i].currentPP << ")" << endl;
+        const auto chooseMove = [this](Pokemon& pokemon) {
+            bool hasPP = false;
+            for (const PokemonMove& learnedMove : pokemon.learnedMoves) {
+                if (learnedMove.currentPP > 0) {
+                    hasPP = true;
+                    break;
+                }
+            }
+
+            if (!hasPP) {
+                cout << pokemon.speciesID << " has no moves with PP remaining." << endl;
+                return -1;
+            }
+
+            cout << "Choose a move for " << pokemon.speciesID << endl;
+            for (size_t i = 0; i < pokemon.learnedMoves.size(); ++i) {
+                const PokemonMove& learnedMove = pokemon.learnedMoves[i];
+                const Move& move = database.getMove(learnedMove.moveID);
+                cout << i + 1 << ". " << move.name << " (PP: "
+                     << learnedMove.currentPP << "/" << move.pp << ")" << endl;
+            }
+
+            int moveChoice = 0;
+            while (true) {
+                cin >> moveChoice;
+                if (cin.fail()) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                } else if (
+                    moveChoice >= 1
+                    && moveChoice <= static_cast<int>(pokemon.learnedMoves.size())
+                    && pokemon.learnedMoves[moveChoice - 1].currentPP > 0
+                ) {
+                    return moveChoice - 1;
+                }
+
+                cout << "Invalid move choice or no PP remaining. Choose a valid move:" << endl;
+            }
+        };
+
+        const int moveIndex1 = chooseMove(pokemon1);
+        const int moveIndex2 = chooseMove(pokemon2);
+        if (moveIndex1 < 0 && moveIndex2 < 0) {
+            noMovesRemaining = true;
+            break;
         }
 
-        int moveChoice1;
-        do {
-            moveChoice1 = 0;
-            cin >> moveChoice1;
-            if (cin.fail()) {
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        const Move* move1 = moveIndex1 >= 0
+            ? &database.getMove(pokemon1.learnedMoves[moveIndex1].moveID)
+            : nullptr;
+        const Move* move2 = moveIndex2 >= 0
+            ? &database.getMove(pokemon2.learnedMoves[moveIndex2].moveID)
+            : nullptr;
+
+        const auto executeMove = [this](
+            Pokemon& attacker,
+            Pokemon& defender,
+            PokemonMove& learnedMove,
+            const Move& move,
+            bool attackerIsPokemon1
+        ) {
+            bool& canAttack = attackerIsPokemon1 ? Pokemon1CanAttack : Pokemon2CanAttack;
+            if (!canAttack) {
+                return;
             }
 
-            if (moveChoice1 < 1 || moveChoice1 > static_cast<int>(pokemon1.learnedMoves.size())) {
-                cout << "Invalid move choice. Choose a valid move:" << endl;
+            if (attacker.Status == MoveEffect::FREEZE) {
+                canAttack = false;
+                cout << attacker.speciesID << " is frozen solid and cannot move!" << endl;
+            } else if (attacker.Status == MoveEffect::SLEEP) {
+                canAttack = false;
+                cout << attacker.speciesID << " is fast asleep and cannot move!" << endl;
+            } else if (attacker.Status == MoveEffect::PARALYZE) {
+                std::uniform_int_distribution<int> distribution(1, 4);
+                if (distribution(generator) == 1) {
+                    canAttack = false;
+                    cout << attacker.speciesID << " is paralysed and cannot move!" << endl;
+                }
             }
-        } while (moveChoice1 < 1 || moveChoice1 > static_cast<int>(pokemon1.learnedMoves.size()));
-
-        const Move& move1 = database.getMove(pokemon1.learnedMoves[moveChoice1 - 1].moveID);
-
-        //choose move for 2nd pokemon
-        cout << "Choose a move for " << pokemon2.speciesID << endl;
-        for (size_t i = 0; i < pokemon2.learnedMoves.size(); ++i) {
-            const Move& move = database.getMove(pokemon2.learnedMoves[i].moveID);
-            cout << i + 1 << ". " << move.name << " (PP: " << pokemon2.learnedMoves[i].currentPP << ")" << endl;
-        }
-
-        int moveChoice2;
-        do {
-            moveChoice2 = 0;
-            cin >> moveChoice2;
-            if (cin.fail()) {
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if (!canAttack) {
+                return;
             }
 
-            if (moveChoice2 < 1 || moveChoice2 > static_cast<int>(pokemon2.learnedMoves.size())) {
-                cout << "Invalid move choice. Choose a valid move:" << endl;
+            --learnedMove.currentPP;
+
+            bool hit = move.accuracy >= 100;
+            if (!hit && move.accuracy > 0) {
+                std::uniform_int_distribution<int> distribution(1, 100);
+                hit = distribution(generator) <= move.accuracy;
             }
-        } while (moveChoice2 < 1 || moveChoice2 > static_cast<int>(pokemon2.learnedMoves.size()));
+            if (!hit) {
+                cout << attacker.speciesID << "'s " << move.name << " missed!" << endl;
+                return;
+            }
 
-        const Move& move2 = database.getMove(pokemon2.learnedMoves[moveChoice2 - 1].moveID);
-
-        //get turn order
-        TurnOrder turnOrder = determineTurnOrder(pokemon1, pokemon2, move1, move2);
-
-        // Execute the moves in turn order and stop if a Pokemon faints.
-        if (turnOrder == TurnOrder::FIRST_POKEMON) {
-            cout << pokemon1.speciesID << " used " << move1.name << "!" << endl;
-            const int damage = MoveResolver(pokemon1, pokemon2, move1);
+            cout << attacker.speciesID << " used " << move.name << "!" << endl;
+            const int damage = MoveResolver(attacker, defender, move);
             cout << damage << " damage dealt!" << endl;
 
+            if (defender.currentHP > 0 && move.effect != MoveEffect::NONE) {
+                bool effectApplied = move.effectChance >= 100;
+                if (!effectApplied && move.effectChance > 0) {
+                    std::uniform_int_distribution<int> distribution(1, 100);
+                    effectApplied = distribution(generator) <= move.effectChance;
+                }
+                if (effectApplied) {
+                    HandleStatusEffects(move, defender, !attackerIsPokemon1);
+                    cout << StatusMessage << endl;
+                    StatusMessage.clear();
+                }
+            }
+        };
+
+        if (move1 != nullptr && move2 != nullptr) {
+            const TurnOrder turnOrder = determineTurnOrder(pokemon1, pokemon2, *move1, *move2);
+            if (turnOrder == TurnOrder::FIRST_POKEMON) {
+                executeMove(pokemon1, pokemon2, pokemon1.learnedMoves[moveIndex1], *move1, true);
+                if (pokemon2.currentHP <= 0) {
+                    cout << pokemon2.speciesID << " fainted!" << endl;
+                    break;
+                }
+                executeMove(pokemon2, pokemon1, pokemon2.learnedMoves[moveIndex2], *move2, false);
+                if (pokemon1.currentHP <= 0) {
+                    cout << pokemon1.speciesID << " fainted!" << endl;
+                    break;
+                }
+            } else {
+                executeMove(pokemon2, pokemon1, pokemon2.learnedMoves[moveIndex2], *move2, false);
+                if (pokemon1.currentHP <= 0) {
+                    cout << pokemon1.speciesID << " fainted!" << endl;
+                    break;
+                }
+                executeMove(pokemon1, pokemon2, pokemon1.learnedMoves[moveIndex1], *move1, true);
+                if (pokemon2.currentHP <= 0) {
+                    cout << pokemon2.speciesID << " fainted!" << endl;
+                    break;
+                }
+            }
+        } else if (move1 != nullptr) {
+            executeMove(pokemon1, pokemon2, pokemon1.learnedMoves[moveIndex1], *move1, true);
             if (pokemon2.currentHP <= 0) {
                 cout << pokemon2.speciesID << " fainted!" << endl;
-                break;
-            }
-
-            cout << pokemon2.speciesID << " used " << move2.name << "!" << endl;
-            const int secondDamage = MoveResolver(pokemon2, pokemon1, move2);
-            cout << secondDamage << " damage dealt!" << endl;
-
-            if (pokemon1.currentHP <= 0) {
-                cout << pokemon1.speciesID << " fainted!" << endl;
                 break;
             }
         } else {
-            cout << pokemon2.speciesID << " used " << move2.name << "!" << endl;
-            const int damage = MoveResolver(pokemon2, pokemon1, move2);
-            cout << damage << " damage dealt!" << endl;
-
+            executeMove(pokemon2, pokemon1, pokemon2.learnedMoves[moveIndex2], *move2, false);
             if (pokemon1.currentHP <= 0) {
                 cout << pokemon1.speciesID << " fainted!" << endl;
                 break;
             }
-
-            cout << pokemon1.speciesID << " used " << move1.name << "!" << endl;
-            const int secondDamage = MoveResolver(pokemon1, pokemon2, move1);
-            cout << secondDamage << " damage dealt!" << endl;
-
-            if (pokemon2.currentHP <= 0) {
-                cout << pokemon2.speciesID << " fainted!" << endl;
-                break;
-            }
         }
+    }
+
+    if (noMovesRemaining) {
+        cout << "The battle ended because neither Pokemon has PP remaining." << endl;
     }
 
     if (pokemon1.currentHP <= 0 && pokemon2.currentHP <= 0) {

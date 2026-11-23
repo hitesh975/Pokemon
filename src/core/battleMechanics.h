@@ -48,6 +48,11 @@ public:
 
     double getCrit() const;
     int GetRandomDamageModifier() const;
+    void HandleStatusEffects(const Move& move, Pokemon& pokemon, bool which);
+
+    bool Pokemon1CanAttack = true;
+    bool Pokemon2CanAttack = true;
+    string StatusMessage = "someething is absolutely wrong (error 001)";
 
 private:
     GameDataBase database;
