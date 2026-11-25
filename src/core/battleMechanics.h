@@ -46,7 +46,7 @@ public:
         const Pokemon& defender
     ) const;
 
-    double getCrit() const;
+    double getCrit(const Move& move) const;
     int GetRandomDamageModifier() const;
     void HandleStatusEffects(const Move& move, Pokemon& pokemon, bool which);
 

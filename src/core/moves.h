@@ -17,7 +17,11 @@ enum class MoveEffect {
     PARALYZE,
     SLEEP,
     FREEZE,
-    POISON
+    POISON,
+    LOWER_ATTACK,
+    LOWER_SP_DEFENSE,
+    LOWER_SPEED,
+    HIGH_CRITICAL
 };
 
 enum class VolatileStatus {
@@ -123,6 +127,10 @@ inline MoveEffect stringToMoveEffect(const std::string& effectStr) {
     else if (effectStr == "SLEEP") return MoveEffect::SLEEP;
     else if (effectStr == "POISON") return MoveEffect::POISON;
     else if (effectStr == "FREEZE") return MoveEffect::FREEZE;
+    else if (effectStr == "LOWER_ATTACK") return MoveEffect::LOWER_ATTACK;
+    else if (effectStr == "LOWER_SP_DEFENSE") return MoveEffect::LOWER_SP_DEFENSE;
+    else if (effectStr == "LOWER_SPEED") return MoveEffect::LOWER_SPEED;
+    else if (effectStr == "HIGH_CRITICAL") return MoveEffect::HIGH_CRITICAL;
 
     throw std::invalid_argument("Invalid move effect: " + effectStr);
 }

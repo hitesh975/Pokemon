@@ -27,8 +27,15 @@ struct Pokemon {
     Stats calculatedStats;
     int currentHP;
 
-    MoveEffect Status;
-    VolatileStatus VolatileStatus;
+    MoveEffect Status = MoveEffect::NONE;
+    VolatileStatus VolatileStatus = VolatileStatus::NONE;
+    int sleepTurns = 0;
+
+    int attackStage = 0;
+    int defenseStage = 0;
+    int spAttackStage = 0;
+    int spDefenseStage = 0;
+    int speedStage = 0;
 
     vector<PokemonMove> learnedMoves;
 };

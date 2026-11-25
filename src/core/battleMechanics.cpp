@@ -13,6 +13,17 @@ namespace {
 bool hasCategory(const Move& move, MoveCategory category) {
     return std::find(move.categories.begin(), move.categories.end(), category) != move.categories.end();
 }
+
+double getStageMultiplier(int stage) {
+    if (stage >= 0) {
+        return (2.0 + stage) / 2.0;
+    }
+    return 2.0 / (2.0 - stage);
+}
+
+int getEffectiveStat(int baseStat, int stage) {
+    return std::max(1, static_cast<int>(baseStat * getStageMultiplier(stage)));
+}
 }
 
 static std::mt19937 generator(std::random_device{}());
@@ -58,9 +69,17 @@ TurnOrder determineTurnOrder(
     } else if (m1.priority < m2.priority) {
         return TurnOrder::SECOND_POKEMON;
       } else {
-          if (p1.calculatedStats.speed > p2.calculatedStats.speed) {
+          int p1Speed = getEffectiveStat(p1.calculatedStats.speed, p1.speedStage);
+          int p2Speed = getEffectiveStat(p2.calculatedStats.speed, p2.speedStage);
+          if (p1.Status == MoveEffect::PARALYZE) {
+              p1Speed = max(1, p1Speed / 4);
+          }
+          if (p2.Status == MoveEffect::PARALYZE) {
+              p2Speed = max(1, p2Speed / 4);
+          }
+          if (p1Speed > p2Speed) {
               return TurnOrder::FIRST_POKEMON;
-          } else if (p1.calculatedStats.speed < p2.calculatedStats.speed) {
+          } else if (p1Speed < p2Speed) {
               return TurnOrder::SECOND_POKEMON;
             } else {
               return (rand() % 2 == 0) ? TurnOrder::FIRST_POKEMON : TurnOrder::SECOND_POKEMON;
@@ -73,8 +92,9 @@ TurnOrder determineTurnOrder(
 
 
 
-double TextBasedBattle::getCrit() const {
-    std::uniform_int_distribution<int> distribution(1, 16);
+double TextBasedBattle::getCrit(const Move& move) const {
+    const int critDenominator = move.effect == MoveEffect::HIGH_CRITICAL ? 8 : 16;
+    std::uniform_int_distribution<int> distribution(1, critDenominator);
     return distribution(generator) == 1 ? 2.0 : 1.0;
 }
 
@@ -154,17 +174,21 @@ int TextBasedBattle::calculatePhysicalDamage(
     }
 
     const int level = max(1, attacker.level);
-    const int attack = max(1, attacker.calculatedStats.attack);
-    const int defense = max(1, defender.calculatedStats.defense);
+    const int attack = max(1, getEffectiveStat(attacker.calculatedStats.attack, attacker.attackStage));
+    const int defense = max(1, getEffectiveStat(defender.calculatedStats.defense, defender.defenseStage));
 
     const double baseDamage =
         ((2.0 * level / 5.0 + 2.0) * move.power * attack / defense) / 50.0 + 2.0;
 
-    const double finalDamage =
+    double finalDamage =
         baseDamage * GetSTAB(attacker, move)
         * TypeEffectivenessCalculator(move, defender)
-        * getCrit()
+        * getCrit(move)
         * GetRandomDamageModifier() / 100.0;
+
+    if (attacker.Status == MoveEffect::BURN) {
+        finalDamage *= 0.5;
+    }
 
     return finalDamage > 0.0
         ? max(1, static_cast<int>(finalDamage))
@@ -189,8 +213,8 @@ int TextBasedBattle::calculateSpecialDamage(
     }
 
     const int level = max(1, attacker.level);
-    const int attack = max(1, attacker.calculatedStats.spAttack);
-    const int defense = max(1, defender.calculatedStats.spDefense);
+    const int attack = max(1, getEffectiveStat(attacker.calculatedStats.spAttack, attacker.spAttackStage));
+    const int defense = max(1, getEffectiveStat(defender.calculatedStats.spDefense, defender.spDefenseStage));
 
     const double baseDamage =
         ((2.0 * level / 5.0 + 2.0) * move.power * attack / defense) / 50.0 + 2.0;
@@ -198,7 +222,7 @@ int TextBasedBattle::calculateSpecialDamage(
     const double finalDamage =
         baseDamage * GetSTAB(attacker, move)
         * TypeEffectivenessCalculator(move, defender)
-        * getCrit()
+        * getCrit(move)
         * GetRandomDamageModifier() / 100.0;
 
     return finalDamage > 0.0
@@ -219,21 +243,29 @@ int TextBasedBattle::MoveResolver(
     const Move& move
 ) const {
     int damage = 0;
+    const bool isPhysical = hasCategory(move, MoveCategory::PHYSICAL);
+    const bool isSpecial = hasCategory(move, MoveCategory::SPECIAL);
 
-    if (hasCategory(move, MoveCategory::PHYSICAL)) {
+    if (isPhysical && isSpecial) {
+        cout << "Invalid move configuration for " << move.name
+             << ": move cannot be both PHYSICAL and SPECIAL." << endl;
+        return 0;
+    }
+
+    if (isPhysical) {
         damage = calculatePhysicalDamage(attacker, defender, move);
         defender.currentHP = max(0, defender.currentHP - damage);
-    }
-    if (hasCategory(move, MoveCategory::SPECIAL)) {
+    } else if (isSpecial) {
         damage = calculateSpecialDamage(attacker, defender, move);
         defender.currentHP = max(0, defender.currentHP - damage);
     }
+
     if (hasCategory(move, MoveCategory::HEAL)) {
         attacker.currentHP += move.heal;
         attacker.currentHP = min(attacker.calculatedStats.hp, attacker.currentHP);
     }
     if (hasCategory(move, MoveCategory::STATUS)) {
-        
+
     }
 
     (void)defender;
@@ -244,46 +276,76 @@ int TextBasedBattle::MoveResolver(
 
 
 
+namespace {
+bool isPrimaryStatusEffect(MoveEffect effect) {
+    return effect == MoveEffect::BURN
+        || effect == MoveEffect::FREEZE
+        || effect == MoveEffect::PARALYZE
+        || effect == MoveEffect::POISON
+        || effect == MoveEffect::SLEEP;
+}
+
+void applyStatStageChange(Pokemon& pokemon, int& stage, int delta, const std::string& statName, std::string& statusMessage) {
+    const int previousStage = stage;
+    stage = std::clamp(stage + delta, -6, 6);
+    if (stage == previousStage) {
+        statusMessage = pokemon.speciesID + "'s " + statName + " won't go any lower!";
+        return;
+    }
+    statusMessage = pokemon.speciesID + "'s " + statName + " fell!";
+}
+}
+
 //status effects
-    void TextBasedBattle::HandleStatusEffects(
+void TextBasedBattle::HandleStatusEffects(
     const Move& move,
     Pokemon& pokemon,
     bool which //which pokemon
-    ) {
-        (void)which;
+) {
+    (void)which;
+    StatusMessage.clear();
 
-    //none
     if (move.effect == MoveEffect::NONE) {
-        pokemon.Status = MoveEffect::NONE;
-
-
-    } else if (move.effect == MoveEffect::BURN) {         //BURN
-        pokemon.Status = MoveEffect::BURN;
-        //halve the pokemons atack outside of this function probably in damage calculator formula
-        pokemon.currentHP -= pokemon.calculatedStats.hp / 16;
-        StatusMessage = pokemon.speciesID + " is hurt by its burn";
-
-
-    } else if (move.effect == MoveEffect::FREEZE) {       //FREEZE
-        pokemon.Status = MoveEffect::FREEZE;
-        StatusMessage = pokemon.speciesID + " is frozen solid";
-
-
-    } else if (move.effect == MoveEffect::PARALYZE) {     //PARALYZE
-        pokemon.Status = MoveEffect::PARALYZE;
-        StatusMessage = pokemon.speciesID + " is paralysed";
-
-
-    } else if (move.effect == MoveEffect::POISON) {       //POSION
-        StatusMessage = pokemon.speciesID + " is poisoned";
-        pokemon.Status = MoveEffect::POISON;
-        pokemon.currentHP -= pokemon.calculatedStats.hp / 16;
-
-    } else if (move.effect == MoveEffect::SLEEP) {        //SLEP
-        pokemon.Status = MoveEffect::SLEEP;
-        StatusMessage = pokemon.speciesID + " is fast asleep";
+        return;
     }
 
+    if (isPrimaryStatusEffect(move.effect)) {
+        if (pokemon.Status != MoveEffect::NONE) {
+            StatusMessage = pokemon.speciesID
+                + " already has a status condition, so the new status could not be applied!";
+            return;
+        }
+
+        if (move.effect == MoveEffect::BURN) {
+            pokemon.Status = MoveEffect::BURN;
+            StatusMessage = pokemon.speciesID + " was burned!";
+        } else if (move.effect == MoveEffect::FREEZE) {
+            pokemon.Status = MoveEffect::FREEZE;
+            StatusMessage = pokemon.speciesID + " is frozen solid!";
+        } else if (move.effect == MoveEffect::PARALYZE) {
+            pokemon.Status = MoveEffect::PARALYZE;
+            StatusMessage = pokemon.speciesID + " is paralysed!";
+        } else if (move.effect == MoveEffect::POISON) {
+            pokemon.Status = MoveEffect::POISON;
+            StatusMessage = pokemon.speciesID + " was poisoned!";
+        } else if (move.effect == MoveEffect::SLEEP) {
+            pokemon.Status = MoveEffect::SLEEP;
+            std::uniform_int_distribution<int> sleepDistribution(1, 5);
+            pokemon.sleepTurns = sleepDistribution(generator);
+            StatusMessage = pokemon.speciesID + " fell asleep!";
+        }
+        return;
+    }
+
+    if (move.effect == MoveEffect::LOWER_ATTACK) {
+        applyStatStageChange(pokemon, pokemon.attackStage, -1, "Attack", StatusMessage);
+    } else if (move.effect == MoveEffect::LOWER_SP_DEFENSE) {
+        applyStatStageChange(pokemon, pokemon.spDefenseStage, -1, "Sp. Def", StatusMessage);
+    } else if (move.effect == MoveEffect::LOWER_SPEED) {
+        applyStatStageChange(pokemon, pokemon.speedStage, -1, "Speed", StatusMessage);
+    } else if (move.effect == MoveEffect::HIGH_CRITICAL) {
+        StatusMessage.clear();
+    }
 }
 
 
@@ -366,16 +428,27 @@ void TextBasedBattle::startBattle() {
             }
 
             if (attacker.Status == MoveEffect::FREEZE) {
-                canAttack = false;
-                cout << attacker.speciesID << " is frozen solid and cannot move!" << endl;
+                std::uniform_int_distribution<int> thawDistribution(1, 100);
+                if (thawDistribution(generator) <= 20) {
+                    attacker.Status = MoveEffect::NONE;
+                    cout << attacker.speciesID << " thawed out!" << endl;
+                } else {
+                    canAttack = false;
+                    cout << attacker.speciesID << " is frozen solid!" << endl;
+                }
             } else if (attacker.Status == MoveEffect::SLEEP) {
                 canAttack = false;
-                cout << attacker.speciesID << " is fast asleep and cannot move!" << endl;
+                cout << attacker.speciesID << " is fast asleep." << endl;
+                attacker.sleepTurns = max(0, attacker.sleepTurns - 1);
+                if (attacker.sleepTurns <= 0) {
+                    attacker.Status = MoveEffect::NONE;
+                    cout << attacker.speciesID << " woke up!" << endl;
+                }
             } else if (attacker.Status == MoveEffect::PARALYZE) {
                 std::uniform_int_distribution<int> distribution(1, 4);
                 if (distribution(generator) == 1) {
                     canAttack = false;
-                    cout << attacker.speciesID << " is paralysed and cannot move!" << endl;
+                    cout << attacker.speciesID << " is paralysed! It can't move!" << endl;
                 }
             }
             if (!canAttack) {
@@ -395,8 +468,27 @@ void TextBasedBattle::startBattle() {
             }
 
             cout << attacker.speciesID << " used " << move.name << "!" << endl;
+            const bool isPhysical = hasCategory(move, MoveCategory::PHYSICAL);
+            const bool isSpecial = hasCategory(move, MoveCategory::SPECIAL);
+            const bool isHeal = hasCategory(move, MoveCategory::HEAL);
+            const bool isStatus = hasCategory(move, MoveCategory::STATUS);
+            const bool invalidDamageConfig = isPhysical && isSpecial;
+            const int hpBeforeHeal = attacker.currentHP;
+
             const int damage = MoveResolver(attacker, defender, move);
-            cout << damage << " damage dealt!" << endl;
+
+            if ((isPhysical || isSpecial) && !invalidDamageConfig) {
+                cout << damage << " damage dealt!" << endl;
+            }
+
+            if (isHeal) {
+                const int hpRestored = attacker.currentHP - hpBeforeHeal;
+                cout << attacker.speciesID << " restored " << hpRestored << " HP!" << endl;
+            }
+
+            if (isStatus && !isPhysical && !isSpecial && !isHeal) {
+                // Status moves do not display a damage message.
+            }
 
             if (defender.currentHP > 0 && move.effect != MoveEffect::NONE) {
                 bool effectApplied = move.effectChance >= 100;
@@ -406,8 +498,10 @@ void TextBasedBattle::startBattle() {
                 }
                 if (effectApplied) {
                     HandleStatusEffects(move, defender, !attackerIsPokemon1);
-                    cout << StatusMessage << endl;
-                    StatusMessage.clear();
+                    if (!StatusMessage.empty()) {
+                        cout << StatusMessage << endl;
+                        StatusMessage.clear();
+                    }
                 }
             }
         };
@@ -449,6 +543,34 @@ void TextBasedBattle::startBattle() {
                 cout << pokemon1.speciesID << " fainted!" << endl;
                 break;
             }
+        }
+
+        const auto applyEndOfTurnStatusDamage = [this](Pokemon& pokemon) {
+            if (pokemon.currentHP <= 0) {
+                return;
+            }
+            if (pokemon.Status == MoveEffect::BURN) {
+                const int damage = max(1, pokemon.calculatedStats.hp / 16);
+                pokemon.currentHP = max(0, pokemon.currentHP - damage);
+                cout << pokemon.speciesID << " is hurt by its burn!" << endl;
+            } else if (pokemon.Status == MoveEffect::POISON) {
+                const int damage = max(1, pokemon.calculatedStats.hp / 16);
+                pokemon.currentHP = max(0, pokemon.currentHP - damage);
+                cout << pokemon.speciesID << " is hurt by poison!" << endl;
+            }
+        };
+
+        applyEndOfTurnStatusDamage(pokemon1);
+        applyEndOfTurnStatusDamage(pokemon2);
+
+        if (pokemon1.currentHP <= 0) {
+            cout << pokemon1.speciesID << " fainted!" << endl;
+        }
+        if (pokemon2.currentHP <= 0) {
+            cout << pokemon2.speciesID << " fainted!" << endl;
+        }
+        if (pokemon1.currentHP <= 0 || pokemon2.currentHP <= 0) {
+            break;
         }
     }
 
